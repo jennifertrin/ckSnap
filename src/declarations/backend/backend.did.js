@@ -3,7 +3,7 @@ export const idlFactory = ({ IDL }) => {
     'title' : IDL.Text,
     'description' : IDL.Text,
     'contract_address' : IDL.Text,
-    'amount' : IDL.Nat64,
+    'amount' : IDL.Float64,
   });
   return IDL.Service({
     'get' : IDL.Func([IDL.Text], [Proposal], ['query']),

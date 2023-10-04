@@ -14,7 +14,7 @@ type ProposalStore = BTreeMap<Principal, Proposal>;
 #[derive(Clone, Debug, Default, CandidType, Deserialize)]
 struct Proposal {
     pub contract_address: String,
-    pub amount: u64,
+    pub amount: f64,
     pub title: String,
     pub description: String,
 }
@@ -22,6 +22,26 @@ struct Proposal {
 thread_local! {
     static PROPOSAL_STORE: RefCell<ProposalStore> = RefCell::default();
     static ID_STORE: RefCell<IdStore> = RefCell::default();
+}
+
+#[query]
+fn get_all_proposals() -> Vec<Proposal> {
+    ID_STORE.with(|id_store| {
+        PROPOSAL_STORE.with(|proposal_store| {
+            let id_store = id_store.borrow();
+            let proposal_store = proposal_store.borrow();
+            
+            let mut proposals = Vec::new();
+            
+            for id in id_store.values() {
+                if let Some(proposal) = proposal_store.get(id) {
+                    proposals.push(proposal.clone());
+                }
+            }
+            
+            proposals
+        })
+    })
 }
 
 #[query]

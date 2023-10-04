@@ -1,6 +1,7 @@
-type Profile = record { name : text; description : text; keywords : vec text };
-service : {
-  get : (text) -> (Profile) query;
-  getSelf : () -> (Profile) query;
-  update : (Profile) -> ();
-}
+type Proposal = record {
+  title : text;
+  description : text;
+  contract_address : text;
+  amount : float64;
+};
+service : { get : (text) -> (Proposal) query; update : (Proposal) -> () }

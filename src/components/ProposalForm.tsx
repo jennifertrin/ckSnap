@@ -1,26 +1,50 @@
+import { useState } from "react";
+import { backend } from "../declarations/backend/index";
+
 export default function ProposalForm() {
+
+  const [contractAddress, setContractAddress] = useState<string>('');
+  const [tokenAmount, setTokenAmount] = useState<number>(0);
+  const [proposalTitle, setProposalTitle] = useState<string>('');
+  const [proposalDescription, setProposalDescription] = useState<string>('');
+
+  const profileToUpdate = {
+    contract_address: contractAddress,
+    amount: tokenAmount,
+    title: proposalTitle,
+    description: proposalDescription,
+  };
+  
   const formVariables = [
     {
       label: "Contract Address",
       id: "contractAddress",
       placeholder: "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
       type: "text",
+      value: contractAddress,
+      setFunction: setContractAddress,
     },
     {
       label: "Minimum Token Amount to Vote",
       id: "tokenAmount",
       placeholder: "0.5",
       type: "number",
+      value: tokenAmount,
+      setFunction: setTokenAmount,
     },
     {
       label: "Proposal Title",
       id: "proposalTitle",
       type: "text",
+      value: proposalTitle,
+      setFunction: setProposalTitle
     },
     {
       label: "Proposal Description",
       id: "proposalDescription",
       type: "text",
+      value: proposalDescription,
+      setFunction: setProposalDescription
     },
   ];
 
@@ -68,7 +92,7 @@ export default function ProposalForm() {
         >
           Cancel
         </button>
-        <button className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+        <button onClick={() => backend.update(profileToUpdate)} className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
           Save
         </button>
       </div>
