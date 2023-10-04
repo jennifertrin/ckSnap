@@ -1,0 +1,6 @@
+type Profile = record { name : text; description : text; keywords : vec text };
+service : {
+  get : (text) -> (Profile) query;
+  getSelf : () -> (Profile) query;
+  update : (Profile) -> ();
+}

@@ -1,0 +1,17 @@
+{
+  "canisters": {
+    "backend": {
+      "candid": "src/backend/backend.did",
+      "package": "backend",
+      "type": "rust"
+    },
+    "onchainvoting": {
+      "frontend": {
+        "dependencies": "backend",
+        "entrypoint": "src/index.tsx"
+      },
+      "source": ["build"],
+      "type": "assets"
+    }
+  }
+}
