@@ -7,6 +7,7 @@ export const idlFactory = ({ IDL }) => {
   });
   return IDL.Service({
     'get' : IDL.Func([IDL.Text], [Proposal], ['query']),
+    'get_all_proposals' : IDL.Func([], [IDL.Vec(Proposal)], ['query']),
     'update' : IDL.Func([Proposal], [], []),
   });
 };

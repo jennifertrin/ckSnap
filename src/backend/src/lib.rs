@@ -38,7 +38,6 @@ fn get_all_proposals() -> Vec<Proposal> {
                     proposals.push(proposal.clone());
                 }
             }
-            
             proposals
         })
     })

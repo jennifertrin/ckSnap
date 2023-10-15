@@ -2,6 +2,10 @@ type Proposal = record {
   title : text;
   description : text;
   contract_address : text;
-  amount : nat64;
+  amount : float64;
 };
-service : { get : (text) -> (Proposal) query; update : (Proposal) -> () }
+service : {
+  get : (text) -> (Proposal) query;
+  get_all_proposals : () -> (vec Proposal) query;
+  update : (Proposal) -> ();
+}

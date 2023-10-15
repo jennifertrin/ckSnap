@@ -5,9 +5,10 @@ export interface Proposal {
   'title' : string,
   'description' : string,
   'contract_address' : string,
-  'amount' : bigint,
+  'amount' : number,
 }
 export interface _SERVICE {
   'get' : ActorMethod<[string], Proposal>,
+  'get_all_proposals' : ActorMethod<[], Array<Proposal>>,
   'update' : ActorMethod<[Proposal], undefined>,
 }

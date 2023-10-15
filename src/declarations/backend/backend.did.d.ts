@@ -9,5 +9,6 @@ export interface Proposal {
 }
 export interface _SERVICE {
   'get' : ActorMethod<[string], Proposal>,
+  'get_all_proposals' : ActorMethod<[], Array<Proposal>>,
   'update' : ActorMethod<[Proposal], undefined>,
 }
