@@ -1,5 +1,8 @@
 service: () -> {
     createProposal: (text, text, int8, text, text) -> (record {id:text; title:text; description:text; contract_address:text; amount:int8});
+    ethGetBalance: (text) -> (text);
+    ethGetBlockByNumber: (nat32) -> (text);
+    ethTransform: (record {context:vec nat8; response:record {status:nat; body:vec nat8; headers:vec record {value:text; name:text}}}) -> (record {status:nat; body:vec nat8; headers:vec record {value:text; name:text}}) query;
     getAllProposals: () -> (vec record {id:text; title:text; description:text; contract_address:text; amount:int8}) query;
     getProposal: (text) -> (opt record {id:text; title:text; description:text; contract_address:text; amount:int8}) query;
 }

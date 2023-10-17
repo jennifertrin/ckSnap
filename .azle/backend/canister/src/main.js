@@ -98399,6 +98399,33 @@ var AzleText = class {
     }
 };
 var text = AzleText;
+// node_modules/azle/src/lib/candid/types/primitive/void.ts
+var AzleVoid = class {
+    static getIDL() {
+        return [];
+    }
+    constructor(){
+        this._kind = "AzleVoid";
+    }
+};
+var Void = AzleVoid;
+// node_modules/azle/src/lib/candid/types/reference/func.ts
+var modeToCandid = {
+    query: [
+        "query"
+    ],
+    oneway: [
+        "oneway"
+    ],
+    update: []
+};
+function Func2(paramCandidTypes, returnCandidTypes, mode) {
+    return {
+        getIDL (parents) {
+            return idl_exports.Func(toParamIDLTypes(paramCandidTypes, parents), toReturnIDLType(returnCandidTypes, parents), modeToCandid[mode]);
+        }
+    };
+}
 // node_modules/azle/src/lib/candid/types/reference/service.ts
 function Canister(canisterOptions) {
     let result = (parentOrPrincipal)=>{
@@ -99544,7 +99571,375 @@ var RejectionCode = Variant2({
     CanisterError: Null2,
     Unknown: Null2
 });
+// node_modules/azle/canisters/management/bitcoin.ts
+var BitcoinAddress = text;
+var BlockHash = blob;
+var Page = blob;
+var MillisatoshiPerByte = nat64;
+var Satoshi = nat64;
+var BitcoinNetwork = Variant2({
+    Mainnet: Null2,
+    Regtest: Null2,
+    Testnet: Null2
+});
+var Outpoint = Record2({
+    txid: blob,
+    vout: nat32
+});
+var Utxo = Record2({
+    height: nat32,
+    outpoint: Outpoint,
+    value: Satoshi
+});
+var UtxosFilter = Variant2({
+    MinConfirmations: nat32,
+    Page
+});
+var GetBalanceArgs = Record2({
+    address: BitcoinAddress,
+    min_confirmations: Opt2(nat32),
+    network: BitcoinNetwork
+});
+var GetCurrentFeePercentilesArgs = Record2({
+    network: BitcoinNetwork
+});
+var GetUtxosArgs = Record2({
+    address: BitcoinAddress,
+    filter: Opt2(UtxosFilter),
+    network: BitcoinNetwork
+});
+var GetUtxosResult = Record2({
+    next_page: Opt2(Page),
+    tip_block_hash: BlockHash,
+    tip_height: nat32,
+    utxos: Vec2(Utxo)
+});
+var SendTransactionArgs = Record2({
+    transaction: blob,
+    network: BitcoinNetwork
+});
+var SendTransactionError = Variant2({
+    MalformedTransaction: Null2,
+    QueueFull: Null2
+});
+// node_modules/azle/canisters/management/canister_info.ts
+var CanisterInfoArgs = Record2({
+    /** Principle of the canister. */ canister_id: Principal3,
+    /**
+   * Number of most recent changes requested to be retrieved from canister
+   * history. No changes are retrieved if this field is `None`.
+   */ num_requested_changes: Opt2(nat64)
+});
+var CreationRecord = Record2({
+    /** Initial set of canister controllers. */ controllers: Vec2(Principal3)
+});
+var CanisterInstallMode = Variant2({
+    /** A fresh install of a new canister. */ install: Null2,
+    /** Reinstalling a canister that was already installed. */ reinstall: Null2,
+    /** Upgrade an existing canister. */ upgrade: Null2
+});
+var CodeDeploymentRecord = Record2({
+    /** See {@link CanisterInstallMode}. */ mode: CanisterInstallMode,
+    /** A SHA256 hash of the new module installed on the canister. */ module_hash: Vec2(nat8)
+});
+var ControllersChangeRecord = Record2({
+    /** The full new set of canister controllers. */ controllers: Vec2(Principal3)
+});
+var CanisterChangeDetails = Variant2({
+    /** See {@link CreationRecord}. */ creation: CreationRecord,
+    /** Uninstalling canister's module */ code_uninstall: Null2,
+    /** See {@link CodeDeploymentRecord}. */ code_deployment: CodeDeploymentRecord,
+    /** See {@link ControllersChangeRecord}. */ controllers_change: ControllersChangeRecord
+});
+var FromUserRecord = Record2({
+    /** Principle of the user. */ user_id: Principal3
+});
+var FromCanisterRecord = Record2({
+    /** Principle of the originator. */ canister_id: Principal3,
+    /**
+   * Canister version of the originator when the originator initiated the
+   * change. This is `None` if the original does not include its canister
+   * version in the field `sender_canister_version` of the management canister
+   * payload.
+   */ canister_version: Opt2(nat64)
+});
+var CanisterChangeOrigin = Variant2({
+    /** See {@link FromUserRecord}. */ from_user: FromUserRecord,
+    /** See {@link FromCanisterRecord}. */ from_canister: FromCanisterRecord
+});
+var CanisterChange = Record2({
+    /**
+   * The system timestamp (in nanoseconds since Unix Epoch) at which the
+   * change was performed
+   */ timestamp_nanos: nat64,
+    /** The canister version after performing the change. */ canister_version: nat64,
+    /** The change’s origin (a user or a canister). */ origin: CanisterChangeOrigin,
+    /** The change’s details. */ details: CanisterChangeDetails
+});
+var CanisterInfoResult = Record2({
+    /**
+   * Total number of changes ever recorded in canister history. This might be
+   * higher than the number of canister changes in recent_changes because the
+   * IC might drop old canister changes from its history (with 20 most recent
+   * canister changes to always remain in the list).
+   */ total_num_changes: nat64,
+    /**
+   * The canister changes stored in the order from the oldest to the most
+   * recent.
+   */ recent_changes: Vec2(CanisterChange),
+    /**
+   * A SHA256 hash of the module installed on the canister. This is null if
+   * the canister is empty.
+   */ module_hash: Opt2(Vec2(nat8)),
+    /** Controllers of the canister. */ controllers: Vec2(Principal3)
+});
+// node_modules/azle/canisters/management/canister_management.ts
+var CanisterId = Principal3;
+var WasmModule = blob;
+var CanisterSettings = Record2({
+    /**
+   * A list of principals. Must be between 0 and 10 in size. This
+   * value is assigned to the controllers attribute of the canister.
+   *
+   * Default value: A list containing only the caller of the
+   * {@link Management.create_canister} call
+   */ controllers: Opt2(Vec2(Principal3)),
+    compute_allocation: Opt2(nat),
+    memory_allocation: Opt2(nat),
+    freezing_threshold: Opt2(nat)
+});
+var CreateCanisterArgs = Record2({
+    settings: Opt2(CanisterSettings)
+});
+var CreateCanisterResult = Record2({
+    canister_id: Principal3
+});
+var CanisterStatus = Variant2({
+    running: Null2,
+    stopping: Null2,
+    stopped: Null2
+});
+var DefiniteCanisterSettings = Record2({
+    controllers: Vec2(Principal3),
+    compute_allocation: nat,
+    memory_allocation: nat,
+    freezing_threshold: nat
+});
+var CanisterStatusResult = Record2({
+    status: CanisterStatus,
+    settings: DefiniteCanisterSettings,
+    module_hash: Opt2(blob),
+    memory_size: nat,
+    cycles: nat
+});
+var CanisterStatusArgs = Record2({
+    canister_id: Principal3
+});
+var UpdateSettingsArgs = Record2({
+    canister_id: CanisterId,
+    settings: CanisterSettings
+});
+var InstallCodeMode = Variant2({
+    install: Null2,
+    reinstall: Null2,
+    upgrade: Null2
+});
+var InstallCodeArgs = Record2({
+    mode: InstallCodeMode,
+    canister_id: CanisterId,
+    wasm_module: WasmModule,
+    arg: blob
+});
+var UninstallCodeArgs = Record2({
+    canister_id: CanisterId
+});
+var StartCanisterArgs = Record2({
+    canister_id: CanisterId
+});
+var StopCanisterArgs = Record2({
+    canister_id: CanisterId
+});
+var DeleteCanisterArgs = Record2({
+    canister_id: CanisterId
+});
+var ProvisionalCreateCanisterWithCyclesArgs = Record2({
+    amount: Opt2(nat),
+    settings: Opt2(CanisterSettings)
+});
+var ProvisionalCreateCanisterWithCyclesResult = Record2({
+    canister_id: CanisterId
+});
+var ProvisionalTopUpCanisterArgs = Record2({
+    canister_id: CanisterId,
+    amount: nat
+});
+var DepositCyclesArgs = Record2({
+    canister_id: CanisterId
+});
+// node_modules/azle/canisters/management/http_request.ts
+var HttpHeader = Record2({
+    name: text,
+    value: text
+});
+var HttpMethod = Variant2({
+    get: Null2,
+    head: Null2,
+    post: Null2
+});
+var HttpResponse = Record2({
+    /**
+   * The response status (e.g., 200, 404)
+   */ status: nat,
+    /**
+   * List of HTTP response headers and their corresponding values. The number
+   * of headers must not exceed 64. The total number of bytes representing the
+   * header names and values must not exceed 48KiB. The total number of bytes
+   * representing the header names and values must not exceed 48KiB.
+   */ headers: Vec2(HttpHeader),
+    /**
+   * The response's body encoded as bytes
+   */ body: blob
+});
+var HttpTransformArgs = Record2({
+    response: HttpResponse,
+    context: blob
+});
+var HttpTransformFunc = Func2([
+    HttpTransformArgs
+], HttpResponse, "query");
+var HttpTransform = Record2({
+    /**
+   * Transforms raw responses to sanitized responses. Must be an exported
+   * canister method.
+   */ function: HttpTransformFunc,
+    /**
+   * A byte-encoded value that is provided to the function upon
+   * invocation, along with the response to be sanitized.
+   */ context: blob
+});
+var HttpRequestArgs = Record2({
+    /**
+   * The requested URL. The URL must be valid according to
+   * https://www.ietf.org/rfc/rfc3986.txt[RFC-3986] and its length must not
+   * exceed 8192. The URL may specify a custom port number.
+   */ url: text,
+    /**
+   * Specifies the maximal size of the response in bytes. If provided, the
+   * value must not exceed 2MB (2,000,000B). The call will be charged based on
+   * this parameter. If not provided, the maximum of 2MB will be used.
+   */ max_response_bytes: Opt2(nat64),
+    /**
+   * Currently, only GET, HEAD, and POST are supported
+   */ method: HttpMethod,
+    /**
+   * List of HTTP request headers and their corresponding values. The number
+   * of headers must not exceed 64. The total number of bytes representing the
+   * header names and values must not exceed 48KiB. The total number of bytes
+   * representing the header names and values must not exceed 48KiB.
+   */ headers: Vec2(HttpHeader),
+    /**
+   * The content of the request's body
+   */ body: Opt2(blob),
+    /**
+   * An optional function that transforms raw responses to sanitized responses,
+   * and a byte-encoded context that is provided to the function upon
+   * invocation, along with the response to be sanitized.
+   * If provided, the calling canister itself must export this function.
+   */ transform: Opt2(HttpTransform)
+});
+// node_modules/azle/canisters/management/t_ecdsa.ts
+var EcdsaCurve = Variant2({
+    secp256k1: Null2
+});
+var KeyId = Record2({
+    curve: EcdsaCurve,
+    name: text
+});
+var EcdsaPublicKeyArgs = Record2({
+    canister_id: Opt2(Principal3),
+    derivation_path: Vec2(blob),
+    key_id: KeyId
+});
+var EcdsaPublicKeyResult = Record2({
+    public_key: blob,
+    chain_code: blob
+});
+var SignWithEcdsaArgs = Record2({
+    message_hash: blob,
+    derivation_path: Vec2(blob),
+    key_id: KeyId
+});
+var SignWithEcdsaResult = Record2({
+    signature: blob
+});
+// node_modules/azle/canisters/management/index.ts
+var managementCanister = Canister({
+    // bitcoin
+    bitcoin_get_balance: update([
+        GetBalanceArgs
+    ], Satoshi),
+    bitcoin_get_current_fee_percentiles: update([
+        GetCurrentFeePercentilesArgs
+    ], Vec2(MillisatoshiPerByte)),
+    bitcoin_get_utxos: update([
+        GetUtxosArgs
+    ], GetUtxosResult),
+    bitcoin_send_transaction: update([
+        SendTransactionArgs
+    ], Void),
+    // canister management
+    create_canister: update([
+        CreateCanisterArgs
+    ], CreateCanisterResult),
+    update_settings: update([
+        UpdateSettingsArgs
+    ], Void),
+    install_code: update([
+        InstallCodeArgs
+    ], Void),
+    uninstall_code: update([
+        UninstallCodeArgs
+    ], Void),
+    start_canister: update([
+        StartCanisterArgs
+    ], Void),
+    stop_canister: update([
+        StopCanisterArgs
+    ], Void),
+    /** Get public information about the canister. */ canister_info: update([
+        CanisterInfoArgs
+    ], CanisterInfoResult),
+    canister_status: update([
+        CanisterStatusArgs
+    ], CanisterStatusResult),
+    delete_canister: update([
+        DeleteCanisterArgs
+    ], Void),
+    deposit_cycles: update([
+        DepositCyclesArgs
+    ], Void),
+    provisional_create_canister_with_cycles: update([
+        ProvisionalCreateCanisterWithCyclesArgs
+    ], ProvisionalCreateCanisterWithCyclesResult),
+    provisional_top_up_canister: update([
+        ProvisionalTopUpCanisterArgs
+    ], Void),
+    // http
+    http_request: update([
+        HttpRequestArgs
+    ], HttpResponse),
+    // randomness
+    raw_rand: update([], blob),
+    // tEcdsa
+    ecdsa_public_key: update([
+        EcdsaPublicKeyArgs
+    ], EcdsaPublicKeyResult),
+    sign_with_ecdsa: update([
+        SignWithEcdsaArgs
+    ], SignWithEcdsaResult)
+})(Principal3.fromText("aaaaa-aa"));
 // backend/index.ts
+var stableStorage = StableBTreeMap(text, text, 0);
 var Proposal = Record2({
     id: text,
     contract_address: text,
@@ -99579,6 +99974,91 @@ var backend_default = Canister({
         };
         proposals.insert(id2, proposal);
         return proposal;
+    }),
+    ethGetBalance: update([
+        text
+    ], text, async (ethereumAddress)=>{
+        const urlOpt = stableStorage.get("ethereumUrl");
+        if ("None" in urlOpt) {
+            throw new Error("ethereumUrl is not defined");
+        }
+        const url = urlOpt.Some;
+        const httpResponse = await ic.call(managementCanister.http_request, {
+            args: [
+                {
+                    url,
+                    max_response_bytes: Some(2000n),
+                    method: {
+                        post: null
+                    },
+                    headers: [],
+                    body: Some(Buffer.from(JSON.stringify({
+                        jsonrpc: "2.0",
+                        method: "eth_getBalance",
+                        params: [
+                            ethereumAddress,
+                            "earliest"
+                        ],
+                        id: 1
+                    }), "utf-8")),
+                    transform: Some({
+                        function: [
+                            ic.id(),
+                            "ethTransform"
+                        ],
+                        context: Uint8Array.from([])
+                    })
+                }
+            ],
+            cycles: 50000000n
+        });
+        return Buffer.from(httpResponse.body.buffer).toString("utf-8");
+    }),
+    ethGetBlockByNumber: update([
+        nat32
+    ], text, async (number)=>{
+        const urlOpt = stableStorage.get("ethereumUrl");
+        if ("None" in urlOpt) {
+            throw new Error("ethereumUrl is not defined");
+        }
+        const url = urlOpt.Some;
+        const httpResponse = await ic.call(managementCanister.http_request, {
+            args: [
+                {
+                    url,
+                    max_response_bytes: Some(2000n),
+                    method: {
+                        post: null
+                    },
+                    headers: [],
+                    body: Some(Buffer.from(JSON.stringify({
+                        jsonrpc: "2.0",
+                        method: "eth_getBlockByNumber",
+                        params: [
+                            `0x${number.toString(16)}`,
+                            false
+                        ],
+                        id: 1
+                    }), "utf-8")),
+                    transform: Some({
+                        function: [
+                            ic.id(),
+                            "ethTransform"
+                        ],
+                        context: Uint8Array.from([])
+                    })
+                }
+            ],
+            cycles: 50000000n
+        });
+        return Buffer.from(httpResponse.body.buffer).toString("utf-8");
+    }),
+    ethTransform: query([
+        HttpTransformArgs
+    ], HttpResponse, (args)=>{
+        return _extends({}, args.response, {
+            headers: []
+        });
     })
 });
 // <stdin>
