@@ -20,5 +20,5 @@
     "types": []
   },
   "include": ["src"],
-  "exclude": ["backend", ".azle"]
+  "exclude": [".azle", "backend"]
 }

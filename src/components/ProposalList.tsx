@@ -5,13 +5,14 @@ import EmptyContainer from "./EmptyContainer";
 interface Proposal {
   id: string,
   contract_address: string,
-  amount: bigint,
+  amount: number,
   title: string,
   description: string
 }
 
 export default function ProposalList() {
   const [proposals, setProposals] = useState<Proposal[]>([]);
+
 
   useEffect(() => {
     async function fetchProposals() {
@@ -29,7 +30,7 @@ export default function ProposalList() {
 
   return (
     <div>
-      {proposals
+      {proposals.length > 0
         ? proposals.map((proposal) => (
             <div
               key={proposal.title}
