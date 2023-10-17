@@ -1,8 +1,10 @@
 import { useState } from "react";
 import ProposalForm from "./ProposalForm";
+import ProposalList from "./ProposalList";
 
 export default function MainCTA() {
   const [proposalSection, setProposalSection] = useState<boolean>(false);
+  const [proposalListSection, setProposalListSection] = useState<boolean>(false);
 
   return (
     <div className="bg-white">
@@ -35,7 +37,7 @@ export default function MainCTA() {
                 >
                   Create a Proposal
                 </button>
-                <button className="rounded-md bg-slate-200 px-12 py-2.5 text-sm font-semibold text-gray-900 shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                <button onClick={() => setProposalListSection(!proposalListSection)} className="rounded-md bg-slate-200 px-12 py-2.5 text-sm font-semibold text-gray-900 shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                   Vote
                 </button>
               </div>
@@ -56,6 +58,7 @@ export default function MainCTA() {
         </div>
         <div className="flex mx-auto w-2/5">
           {proposalSection ? <ProposalForm></ProposalForm> : null}
+          {proposalListSection ? <ProposalList></ProposalList> : null}
         </div>
       </div>
     </div>
