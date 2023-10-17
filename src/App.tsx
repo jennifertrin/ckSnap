@@ -3,7 +3,7 @@ import MainCTA from './components/MainCTA';
 
 function App() {
   return (
-    <div className="App">
+    <div className="App max-w-screen">
       <MainCTA />
     </div>
   );

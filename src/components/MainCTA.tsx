@@ -12,7 +12,7 @@ export default function MainCTA() {
       <div className="flex flex-col lg:flex-row">
         <div className="flex relative isolate px-6 pt-14 lg:px-8 w-full sm:w-3/5">
           <div
-            className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
+            className="absolute -z-10 transform-gpu overflow-hidden blur-3xl"
             aria-hidden="true"
           >
             <div
@@ -45,14 +45,14 @@ export default function MainCTA() {
                 <button onClick={() => {
                     setProposalSection(false);
                     setProposalListSection(!proposalListSection);
-                  }} className="rounded-md bg-slate-200 px-12 py-2.5 text-sm font-semibold text-gray-900 shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                  }} className="rounded-md bg-white px-12 py-2.5 text-sm font-semibold text-gray-900 shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                   Vote
                 </button>
               </div>
             </div>
           </div>
           <div
-            className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
+            className="absolute -z-10 transform-gpu overflow-hidden blur-3xl"
             aria-hidden="true"
           >
             <div
