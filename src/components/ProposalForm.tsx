@@ -43,11 +43,11 @@ export default function ProposalForm() {
   return (
     <form className="flex flex-col w-full m-auto">
       <div className="block w-full">
-        <div className="mt-4 border-b border-gray-900/10 pb-12 pr-8">
-          <h2 className="text-base text-lg font-semibold leading-7 text-gray-900">
+        <div className="my-auto lg:mt-14 border-b border-gray-900/10 pb-12 px-8">
+          <h2 className="text-base text-xl font-semibold leading-7 text-gray-900">
             Add a Proposal
           </h2>
-          <p className="mt-1 text-sm leading-6 text-gray-600">
+          <p className="mt-1 text-md leading-6 text-gray-600">
             Set up a proposal for an Ethereum-based DAO
           </p>
 
@@ -56,18 +56,18 @@ export default function ProposalForm() {
               <div key={form.label} className="w-full">
                 <label
                   htmlFor={form.label}
-                  className="block text-sm lg:text-md font-medium mx-auto lg:text-left lg:ml-8 leading-6 text-gray-900"
+                  className="block text-md mt-1 font-medium mx-auto lg:text-left lg:ml-8 leading-6 text-gray-900"
                 >
                   {form.label}
                 </label>
-                <div className="px-4 py-6 w-full">
+                <div className="py-4 px-4 w-full">
                   <div className="flex rounded-md w-full shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600">
                     <input
                       type={form.type}
                       name={form.id}
                       id={form.id}
                       autoComplete={form.id}
-                      className="border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 w-full"
+                      className="border-0 bg-transparent py-2.5 pl-2.5 pr-4 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 w-full"
                       placeholder={form.placeholder}
                       value={form.value as any}
                       onChange={(e) => {
@@ -85,13 +85,13 @@ export default function ProposalForm() {
       <div className="mt-6 flex space-x-6 flex items-center justify-end mr-20">
         <button
           type="button"
-          className="text-sm font-semibold leading-6 text-gray-900"
+          className="text-md font-semibold leading-6 text-gray-900"
         >
           Cancel
         </button>
         <button
           onClick={async () => await backend.createProposal("1", contractAddress, tokenAmount, proposalTitle, proposalDescription)}
-          className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          className="rounded-md bg-indigo-600 px-8 py-3 text-md font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
         >
           Save
         </button>

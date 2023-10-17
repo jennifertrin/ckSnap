@@ -1,7 +1,6 @@
 import { useState } from "react";
 import ProposalForm from "./ProposalForm";
 import ProposalList from "./ProposalList";
-import ConnectButton from "./ConnectWallet";
 import ConnectWallet from "./ConnectWallet";
 
 export default function MainCTA() {
@@ -11,7 +10,7 @@ export default function MainCTA() {
   return (
     <div className="bg-white">
       <div className="flex flex-col lg:flex-row">
-        <div className="flex relative isolate px-6 pt-14 lg:px-8 w-3/5">
+        <div className="flex relative isolate px-6 pt-14 lg:px-8 w-full sm:w-3/5">
           <div
             className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
             aria-hidden="true"
@@ -24,13 +23,13 @@ export default function MainCTA() {
               }}
             />
           </div>
-          <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
+          <div className={`m-auto -mt-4 max-w-2xl py-48 lg:py-56`}>
             <div className="text-center">
-              <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+              <h1 className={`text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl`}>
                 Welcome to ckSnap
               </h1>
               <p className="mt-6 text-lg leading-8 text-gray-600">
-                On-chain proposal summoning, voting, and execution
+                on-chain proposal summoning, voting, and execution
               </p>
               <div className="mt-10 flex items-center justify-center gap-x-4">
                 <ConnectWallet />
@@ -65,7 +64,7 @@ export default function MainCTA() {
             />
           </div>
         </div>
-        <div className="flex mx-auto w-2/5">
+        <div className="flex mx-auto w-full lg:w-2/5">
           {proposalSection ? <ProposalForm></ProposalForm> : null}
           {proposalListSection ? <ProposalList></ProposalList> : null}
         </div>
