@@ -1,6 +1,8 @@
 import { useState } from "react";
 import ProposalForm from "./ProposalForm";
 import ProposalList from "./ProposalList";
+import ConnectButton from "./ConnectWallet";
+import ConnectWallet from "./ConnectWallet";
 
 export default function MainCTA() {
   const [proposalSection, setProposalSection] = useState<boolean>(false);
@@ -31,6 +33,7 @@ export default function MainCTA() {
                 On-chain proposal summoning, voting, and execution
               </p>
               <div className="mt-10 flex items-center justify-center gap-x-4">
+                <ConnectWallet />
                 <button
                   onClick={() => setProposalSection(!proposalSection)}
                   className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
