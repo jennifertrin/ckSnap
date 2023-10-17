@@ -3,13 +3,13 @@ import type { ActorMethod } from '@dfinity/agent';
 
 export interface _SERVICE {
   'createProposal' : ActorMethod<
-    [string, string, bigint, string, string],
+    [string, string, number, string, string],
     {
       'id' : string,
       'title' : string,
       'description' : string,
       'contract_address' : string,
-      'amount' : bigint,
+      'amount' : number,
     }
   >,
   'getAllProposals' : ActorMethod<
@@ -20,7 +20,7 @@ export interface _SERVICE {
         'title' : string,
         'description' : string,
         'contract_address' : string,
-        'amount' : bigint,
+        'amount' : number,
       }
     >
   >,
@@ -32,7 +32,7 @@ export interface _SERVICE {
         'title' : string,
         'description' : string,
         'contract_address' : string,
-        'amount' : bigint,
+        'amount' : number,
       }
     ]
   >,

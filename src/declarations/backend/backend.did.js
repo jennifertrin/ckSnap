@@ -1,14 +1,14 @@
 export const idlFactory = ({ IDL }) => {
   return IDL.Service({
     'createProposal' : IDL.Func(
-        [IDL.Text, IDL.Text, IDL.Nat, IDL.Text, IDL.Text],
+        [IDL.Text, IDL.Text, IDL.Int8, IDL.Text, IDL.Text],
         [
           IDL.Record({
             'id' : IDL.Text,
             'title' : IDL.Text,
             'description' : IDL.Text,
             'contract_address' : IDL.Text,
-            'amount' : IDL.Nat,
+            'amount' : IDL.Int8,
           }),
         ],
         [],
@@ -22,7 +22,7 @@ export const idlFactory = ({ IDL }) => {
               'title' : IDL.Text,
               'description' : IDL.Text,
               'contract_address' : IDL.Text,
-              'amount' : IDL.Nat,
+              'amount' : IDL.Int8,
             })
           ),
         ],
@@ -37,7 +37,7 @@ export const idlFactory = ({ IDL }) => {
               'title' : IDL.Text,
               'description' : IDL.Text,
               'contract_address' : IDL.Text,
-              'amount' : IDL.Nat,
+              'amount' : IDL.Int8,
             })
           ),
         ],
