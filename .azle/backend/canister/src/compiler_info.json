@@ -1,0 +1,1 @@
+{"canister_methods":{"queries":[{"name":"getProposal","composite":false},{"name":"getAllProposals","composite":false}],"updates":[{"name":"createProposal"}],"callbacks":{"getProposal":{},"getAllProposals":{},"createProposal":{}}}}

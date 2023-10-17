@@ -7,13 +7,6 @@ export default function ProposalForm() {
   const [proposalTitle, setProposalTitle] = useState<string>("");
   const [proposalDescription, setProposalDescription] = useState<string>("");
 
-  const proposalToUpdate = {
-    contract_address: contractAddress,
-    amount: tokenAmount,
-    title: proposalTitle,
-    description: proposalDescription,
-  };
-
   const formVariables = [
     {
       label: "Contract Address",
@@ -60,7 +53,7 @@ export default function ProposalForm() {
 
           <div className="mt-10 w-full">
             {formVariables.map((form) => (
-              <div className="w-full">
+              <div key={form.label} className="w-full">
                 <label
                   htmlFor={form.label}
                   className="block text-sm lg:text-md font-medium mx-auto lg:text-left lg:ml-8 leading-6 text-gray-900"
@@ -76,7 +69,7 @@ export default function ProposalForm() {
                       autoComplete={form.id}
                       className="border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 w-full"
                       placeholder={form.placeholder}
-                      value={form.value}
+                      value={form.value as any}
                       onChange={(e) => {
                         const inputValue = form.type === 'number' ? parseFloat(e.target.value) : e.target.value;
                         form.setFunction(inputValue as any);
@@ -97,9 +90,7 @@ export default function ProposalForm() {
           Cancel
         </button>
         <button
-          onClick={async () => {
-            await backend.update(proposalToUpdate);
-          }}
+          onClick={async () => await backend.createProposal("1", contractAddress, tokenAmount, proposalTitle, proposalDescription)}
           className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
         >
           Save

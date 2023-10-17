@@ -1,0 +1,5 @@
+service: () -> {
+    createProposal: (text, text, int8, text, text) -> (record {id:text; title:text; description:text; contract_address:text; amount:int8});
+    getAllProposals: () -> (vec record {id:text; title:text; description:text; contract_address:text; amount:int8}) query;
+    getProposal: (text) -> (opt record {id:text; title:text; description:text; contract_address:text; amount:int8}) query;
+}

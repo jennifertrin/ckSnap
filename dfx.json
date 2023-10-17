@@ -1,10 +1,13 @@
 {
   "canisters": {
     "backend": {
-      "candid": "src/backend/backend.did",
-      "package": "backend",
-      "type": "rust"
-    },
+      "type": "custom",
+      "main": "backend/index.ts",
+      "candid": "backend/index.did",
+      "build": "npx azle backend",
+      "wasm": ".azle/backend/backend.wasm",
+      "gzip": true
+  },
     "onchainvoting": {
       "frontend": {
         "dependencies": "backend",

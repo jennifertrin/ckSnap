@@ -1,11 +1,5 @@
-type Proposal = record {
-  title : text;
-  description : text;
-  contract_address : text;
-  amount : float64;
-};
-service : {
-  get : (text) -> (Proposal) query;
-  get_all_proposals : () -> (vec Proposal) query;
-  update : (Proposal) -> ();
+service: () -> {
+    createProposal: (text, text, int8, text, text) -> (record {id:text; title:text; description:text; contract_address:text; amount:int8});
+    getAllProposals: () -> (vec record {id:text; title:text; description:text; contract_address:text; amount:int8}) query;
+    getProposal: (text) -> (opt record {id:text; title:text; description:text; contract_address:text; amount:int8}) query;
 }
