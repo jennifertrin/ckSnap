@@ -1,8 +1,10 @@
 import {
+    blob,
     Canister,
     ic,
     int8,
     nat32,
+    None,
     Opt,
     Principal,
     query,
@@ -20,6 +22,14 @@ import {
 } from 'azle/canisters/management';
 
 let stableStorage = StableBTreeMap(text, text, 0);
+
+const PublicKey = Record({
+    publicKey: blob
+});
+
+const Signature = Record({
+    signature: blob
+});
 
 const Proposal = Record({
     id: text,
@@ -52,7 +62,9 @@ export default Canister({
         if ('None' in urlOpt) {
             throw new Error('ethereumUrl is not defined');
         }
+
         const url = urlOpt.Some;
+
         const httpResponse = await ic.call(managementCanister.http_request, {
             args: [
                 {
@@ -84,6 +96,7 @@ export default Canister({
             ],
             cycles: 50_000_000n
         });
+
         return Buffer.from(httpResponse.body.buffer).toString('utf-8');
     }),
     ethGetBlockByNumber: update([nat32], text, async (number) => {
@@ -133,6 +146,57 @@ export default Canister({
         return {
             ...args.response,
             headers: []
+        };
+    }),
+    publicKey: update([], PublicKey, async () => {
+        const caller = ic.caller().toUint8Array();
+
+        const publicKeyResult = await ic.call(
+            managementCanister.ecdsa_public_key,
+            {
+                args: [
+                    {
+                        canister_id: None,
+                        derivation_path: [caller],
+                        key_id: {
+                            curve: { secp256k1: null },
+                            name: 'dfx_test_key'
+                        }
+                    }
+                ]
+            }
+        );
+
+        return {
+            publicKey: publicKeyResult.public_key
+        };
+    }),
+    sign: update([blob], Signature, async (messageHash) => {
+        if (messageHash.length !== 32) {
+            ic.trap('messageHash must be 32 bytes');
+        }
+
+        const caller = ic.caller().toUint8Array();
+
+        const signatureResult = await ic.call(
+            managementCanister.sign_with_ecdsa,
+            {
+                args: [
+                    {
+                        message_hash: messageHash,
+                        derivation_path: [caller],
+                        key_id: {
+                            curve: { secp256k1: null },
+                            name: 'dfx_test_key'
+                        }
+                    }
+                ],
+                cycles: 10_000_000_000n
+            }
+        );
+
+        return {
+            signature: signatureResult.signature
         };
     })
 })
