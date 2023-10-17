@@ -35,12 +35,18 @@ export default function MainCTA() {
               <div className="mt-10 flex items-center justify-center gap-x-4">
                 <ConnectWallet />
                 <button
-                  onClick={() => setProposalSection(!proposalSection)}
+                  onClick={() => {
+                    setProposalSection(!proposalSection);
+                    setProposalListSection(false);
+                  }}
                   className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
                   Create a Proposal
                 </button>
-                <button onClick={() => setProposalListSection(!proposalListSection)} className="rounded-md bg-slate-200 px-12 py-2.5 text-sm font-semibold text-gray-900 shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                <button onClick={() => {
+                    setProposalSection(false);
+                    setProposalListSection(!proposalListSection);
+                  }} className="rounded-md bg-slate-200 px-12 py-2.5 text-sm font-semibold text-gray-900 shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                   Vote
                 </button>
               </div>
