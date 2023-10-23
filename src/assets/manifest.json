@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "ckSnap",
+  "name": "On-chain proposal creation, voting, and execution",
   "icons": [
     {
       "src": "favicon.ico",
