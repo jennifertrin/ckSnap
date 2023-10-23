@@ -12,7 +12,7 @@ export default function MainCTA() {
       <div className="flex flex-col lg:flex-row">
         <div className="flex relative isolate px-6 pt-14 lg:px-8 w-full sm:w-3/5">
           <div
-            className="absolute -z-10 transform-gpu overflow-hidden blur-3xl"
+            className="absolute transform-gpu overflow-hidden blur-3xl"
             aria-hidden="true"
           >
             <div
@@ -52,7 +52,7 @@ export default function MainCTA() {
             </div>
           </div>
           <div
-            className="absolute -z-10 transform-gpu overflow-hidden blur-3xl"
+            className="absolute transform-gpu overflow-hidden blur-3xl"
             aria-hidden="true"
           >
             <div

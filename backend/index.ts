@@ -31,12 +31,21 @@ const Signature = Record({
     signature: blob
 });
 
+const Execution = Record({
+   to_address: text,
+   from_address: text,
+   token_amount: int8
+})
+
 const Proposal = Record({
     id: text,
     contract_address: text,
     amount: int8,
     title: text,
     description: text,
+    deadline: nat32,
+    block: text,
+    execution: Execution,
 })
 
 let proposals = StableBTreeMap(text, Proposal, 0);
@@ -49,9 +58,11 @@ export default Canister({
         const proposalList = proposals.values();
         return proposalList;
     }),
-    createProposal: update([text, text, int8, text, text], Proposal, (id, contract_address, amount, title, description) => {
+    createProposal: update([text, text, int8, text, text, nat32, Execution], Proposal, async (id, contract_address, amount, title, description, deadline, execution) => {
+        const currentTime = new Date().getTime();
+        const block = await ethGetBlockByNumber(currentTime);
         const proposal : typeof Proposal = {
-            id, contract_address, amount, title, description
+            id, contract_address, amount, title, description, deadline, block, execution
         }
        proposals.insert(id, proposal);
        return proposal;
@@ -100,47 +111,7 @@ export default Canister({
         return Buffer.from(httpResponse.body.buffer).toString('utf-8');
     }),
     ethGetBlockByNumber: update([nat32], text, async (number) => {
-        const urlOpt = stableStorage.get('ethereumUrl');
-
-        if ('None' in urlOpt) {
-            throw new Error('ethereumUrl is not defined');
-        }
-
-        const url = urlOpt.Some;
-
-        const httpResponse = await ic.call(managementCanister.http_request, {
-            args: [
-                {
-                    url,
-                    max_response_bytes: Some(2_000n),
-                    method: {
-                        post: null
-                    },
-                    headers: [],
-                    body: Some(
-                        Buffer.from(
-                            JSON.stringify({
-                                jsonrpc: '2.0',
-                                method: 'eth_getBlockByNumber',
-                                params: [`0x${number.toString(16)}`, false],
-                                id: 1
-                            }),
-                            'utf-8'
-                        )
-                    ),
-                    transform: Some({
-                        function: [ic.id(), 'ethTransform'] as [
-                            Principal,
-                            string
-                        ],
-                        context: Uint8Array.from([])
-                    })
-                }
-            ],
-            cycles: 50_000_000n
-        });
-
-        return Buffer.from(httpResponse.body.buffer).toString('utf-8');
+        return ethGetBlockByNumber(number);
     }),
     ethTransform: query([HttpTransformArgs], HttpResponse, (args) => {
         return {
@@ -200,3 +171,47 @@ export default Canister({
         };
     })
 })
+
+async function ethGetBlockByNumber(number: number) {
+    const urlOpt = stableStorage.get('ethereumUrl');
+
+        if ('None' in urlOpt) {
+            throw new Error('ethereumUrl is not defined');
+        }
+
+        const url = urlOpt.Some;
+
+        const httpResponse = await ic.call(managementCanister.http_request, {
+            args: [
+                {
+                    url,
+                    max_response_bytes: Some(2_000n),
+                    method: {
+                        post: null
+                    },
+                    headers: [],
+                    body: Some(
+                        Buffer.from(
+                            JSON.stringify({
+                                jsonrpc: '2.0',
+                                method: 'eth_getBlockByNumber',
+                                params: [`0x${number.toString(16)}`, false],
+                                id: 1
+                            }),
+                            'utf-8'
+                        )
+                    ),
+                    transform: Some({
+                        function: [ic.id(), 'ethTransform'] as [
+                            Principal,
+                            string
+                        ],
+                        context: Uint8Array.from([])
+                    })
+                }
+            ],
+            cycles: 50_000_000n
+        });
+
+        return Buffer.from(httpResponse.body.buffer).toString('utf-8');
+}
