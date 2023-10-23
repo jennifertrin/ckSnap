@@ -6,6 +6,16 @@ export default function ProposalForm() {
   const [tokenAmount, setTokenAmount] = useState<number>(0);
   const [proposalTitle, setProposalTitle] = useState<string>("");
   const [proposalDescription, setProposalDescription] = useState<string>("");
+  const [proposalExpiration, setProposalExpiration] = useState<number>(200000);
+  const [proposalToAddress, setProposalToAddress] = useState<string>("");
+  const [proposalFromAddress, setProposalFromAddress] = useState<string>("");
+  const [proposalTokenPayment, setProposalTokenPayment] = useState<number>(0.01);
+
+  const executionVariables = {
+    token_amount: proposalTokenPayment,
+    to_address: proposalToAddress,
+    from_address: proposalFromAddress
+  }
 
   const formVariables = [
     {
@@ -38,6 +48,33 @@ export default function ProposalForm() {
       value: proposalDescription,
       setFunction: setProposalDescription,
     },
+    {
+      label: "Proposal Expiration (in seconds)",
+      id: "proposalExpiration",
+      type: "number",
+      value: proposalExpiration,
+      setFunction: setProposalExpiration
+    },
+    {
+      label: "From Address",
+      id: "proposalFromAddress",
+      type: "text",
+      value: proposalFromAddress,
+      setFunction: setProposalFromAddress
+    },
+    {
+      label: "To Address",
+      id: "proposalToAddress",
+      type: "text",
+      value: proposalToAddress,
+      setFunction: setProposalToAddress
+    },
+    {
+      label: "Number of Tokens (Payment)",
+      id: "proposalTokenPayment",
+      value: proposalTokenPayment,
+      setFunction: setProposalTokenPayment
+    },
   ];
 
   return (
@@ -61,13 +98,13 @@ export default function ProposalForm() {
                   {form.label}
                 </label>
                 <div className="py-4 px-4 w-full">
-                  <div className="flex rounded-md w-full shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600">
+                  <div className="flex rounded-md w-full shadow-sm ring-1 ring-inset ring-gray-800 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600">
                     <input
                       type={form.type}
                       name={form.id}
                       id={form.id}
                       autoComplete={form.id}
-                      className="border-0 bg-transparent py-2.5 pl-2.5 pr-4 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 w-full"
+                      className="bg-white rounded-md py-2.5 pl-2.5 pr-4 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 w-full"
                       placeholder={form.placeholder}
                       value={form.value as any}
                       onChange={(e) => {
@@ -90,7 +127,7 @@ export default function ProposalForm() {
           Cancel
         </button>
         <button
-          onClick={async () => await backend.createProposal("1", contractAddress, tokenAmount, proposalTitle, proposalDescription)}
+          onClick={async () => await backend.createProposal("1", contractAddress, tokenAmount, proposalTitle, proposalDescription, proposalExpiration, executionVariables)}
           className="rounded-md bg-indigo-600 px-8 py-3 text-md font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
         >
           Save
