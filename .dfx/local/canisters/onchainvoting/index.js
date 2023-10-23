@@ -4,7 +4,7 @@ import { Actor, HttpAgent } from "@dfinity/agent";
 import { idlFactory } from './onchainvoting.did.js';
 export { idlFactory } from './onchainvoting.did.js';
 // CANISTER_ID is replaced by webpack based on node environment
-export const canisterId = process.env.ONCHAINVOTING_CANISTER_ID;
+export const canisterId = process.env.REACT_APP_ONCHAINVOTING_CANISTER_ID;
 
 /**
  * @deprecated since dfx 0.11.1
