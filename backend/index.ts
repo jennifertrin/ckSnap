@@ -20,6 +20,7 @@ import {
     HttpTransformArgs,
     managementCanister
 } from 'azle/canisters/management';
+import { keccak256 } from "@ethersproject/keccak256";
 
 const PublicKey = Record({
     publicKey: blob
@@ -64,8 +65,13 @@ export default Canister({
        proposals.insert(id, proposal);
        return proposal;
     }),
-    ethGetBalance: update([text], text, async (ethereumAddress) => {
+    ethGetTokenBalance: update([text, text, text], text, async (ethereumAddress, contractAddress, blockNumber) => {
         const url = "https://rpc.ankr.com/eth";
+
+        const signature = keccak256(toUtf8Bytes(`balanceOf(${ethereumAddress})`)).substring(0, 10);
+        const addressWithout0x = ethereumAddress.slice(2);
+        const hash = signature + "000000000000000000000000" + addressWithout0x;
+
 
         const httpResponse = await ic.call(managementCanister.http_request, {
             args: [
@@ -80,8 +86,8 @@ export default Canister({
                         Buffer.from(
                             JSON.stringify({
                                 jsonrpc: '2.0',
-                                method: 'eth_getBalance',
-                                params: [ethereumAddress, 'earliest'],
+                                method: 'eth_call',
+                                params: [{"data":hash,"to":contractAddress}, blockNumber],
                                 id: 1
                             }),
                             'utf-8'
@@ -201,3 +207,7 @@ export default Canister({
             const jsonResponse = JSON.parse(Buffer.from(httpResponse.body.buffer).toString('utf-8'));
             return jsonResponse.result;
     }
+
+function toUtf8Bytes(arg0: string): import("@ethersproject/bytes").BytesLike {
+    throw new Error('Function not implemented.');
+}
