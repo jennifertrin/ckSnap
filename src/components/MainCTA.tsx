@@ -14,7 +14,7 @@ export default function MainCTA() {
   const [proposalListSection, setProposalListSection] = useState<boolean>(false);
 
   return (
-    <div className="bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops))] from-indigo-400 via-indigo-300 to-fuchsia-100 bg-scroll">
+    <div className="bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops))] from-indigo-400 via-indigo-300 to-fuchsia-100 bg-scroll h-screen">
       <div className="flex flex-col lg:flex-row">
         <div className={`m-auto -mt-4 max-w-2xl py-48 lg:py-56`}>
           <div className="text-center">
