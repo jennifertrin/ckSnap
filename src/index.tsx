@@ -5,6 +5,7 @@ import App from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi/react'
+import { MetaMaskProvider } from '@metamask/sdk-react';
 
 import { WagmiConfig } from 'wagmi'
 import { arbitrum, mainnet } from 'wagmi/chains'
@@ -28,9 +29,17 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
+    <MetaMaskProvider debug={false} sdkOptions={{
+      checkInstallationImmediately: false,
+      dappMetadata: {
+        name: "Demo React App",
+        url: window.location.host,
+      }
+    }}>
     <WagmiConfig config={wagmiConfig}>
     <App />
     </WagmiConfig>
+    </MetaMaskProvider>
   </React.StrictMode>
 );
 
