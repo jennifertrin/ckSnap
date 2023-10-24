@@ -21,8 +21,6 @@ import {
     managementCanister
 } from 'azle/canisters/management';
 
-let stableStorage = StableBTreeMap(text, text, 0);
-
 const PublicKey = Record({
     publicKey: blob
 });
@@ -68,13 +66,7 @@ export default Canister({
        return proposal;
     }),
     ethGetBalance: update([text], text, async (ethereumAddress) => {
-        const urlOpt = stableStorage.get('ethereumUrl');
-
-        if ('None' in urlOpt) {
-            throw new Error('ethereumUrl is not defined');
-        }
-
-        const url = urlOpt.Some;
+        const url = "https://rpc.ankr.com/eth";
 
         const httpResponse = await ic.call(managementCanister.http_request, {
             args: [
@@ -173,13 +165,7 @@ export default Canister({
 })
 
 async function ethGetBlockByNumber(number: number) {
-    const urlOpt = stableStorage.get('ethereumUrl');
-
-        if ('None' in urlOpt) {
-            throw new Error('ethereumUrl is not defined');
-        }
-
-        const url = urlOpt.Some;
+    const url = "https://rpc.ankr.com/eth";
 
         const httpResponse = await ic.call(managementCanister.http_request, {
             args: [

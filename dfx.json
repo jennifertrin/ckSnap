@@ -16,6 +16,5 @@
       "source": ["build"],
       "type": "assets"
     }
-  },
-  "output_env_file": ".env"
+  }
 }

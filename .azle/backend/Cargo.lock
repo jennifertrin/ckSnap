@@ -181,8 +181,8 @@ dependencies = [
  "crc32fast",
  "data-encoding",
  "hex",
- "lalrpop 0.20.1",
- "lalrpop-util 0.20.1",
+ "lalrpop 0.20.0",
+ "lalrpop-util 0.20.0",
  "leb128",
  "logos 0.13.0",
  "num-bigint",
@@ -846,15 +846,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "itertools"
-version = "0.11.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b1c173a5686ce8bfa551b3563d0c2170bf24ca44da99c7ca4bfdab5418c3fe57"
-dependencies = [
- "either",
-]
-
-[[package]]
 name = "itoa"
 version = "1.0.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -871,7 +862,7 @@ dependencies = [
  "diff",
  "ena",
  "is-terminal",
- "itertools 0.10.5",
+ "itertools",
  "lalrpop-util 0.19.12",
  "petgraph",
  "regex",
@@ -884,15 +875,17 @@ dependencies = [
 
 [[package]]
 name = "lalrpop"
-version = "0.20.1"
+version = "0.20.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "83be602e051ada38d90c7841092adabeb585197afe9dabb20e4f8375cc87846e"
+checksum = "da4081d44f4611b66c6dd725e6de3169f9f63905421e8626fcb86b6a898998b8"
 dependencies = [
  "ascii-canvas",
  "bit-set",
+ "diff",
  "ena",
- "itertools 0.11.0",
- "lalrpop-util 0.20.1",
+ "is-terminal",
+ "itertools",
+ "lalrpop-util 0.20.0",
  "petgraph",
  "pico-args",
  "regex",
@@ -914,11 +907,11 @@ dependencies = [
 
 [[package]]
 name = "lalrpop-util"
-version = "0.20.1"
+version = "0.20.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "365d88f9d803538a06641e6736f21d95ecf9226dc1693421212e62c405cdd199"
+checksum = "3f35c735096c0293d313e8f2a641627472b83d01b937177fe76e5e2708d31e0d"
 dependencies = [
- "regex-automata 0.3.9",
+ "regex",
 ]
 
 [[package]]
@@ -1471,19 +1464,8 @@ checksum = "380b951a9c5e80ddfd6136919eef32310721aa4aacd4889a8d39124b026ab343"
 dependencies = [
  "aho-corasick",
  "memchr",
- "regex-automata 0.4.3",
+ "regex-automata",
  "regex-syntax 0.8.2",
-]
-
-[[package]]
-name = "regex-automata"
-version = "0.3.9"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "59b23e92ee4318893fa3fe3e6fb365258efbfe6ac6ab30f090cdcbb7aa37efa9"
-dependencies = [
- "aho-corasick",
- "memchr",
- "regex-syntax 0.7.5",
 ]
 
 [[package]]
