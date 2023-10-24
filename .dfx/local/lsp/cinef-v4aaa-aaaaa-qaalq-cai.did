@@ -23,8 +23,8 @@ service : {
         amount : int8;
       },
     );
-  ethGetBalance : (text) -> (text);
   ethGetCurrentBlock : () -> (text);
+  ethGetTokenBalance : (text, text, text) -> (text);
   ethTransform : (
       record {
         context : vec nat8;

@@ -1,7 +1,7 @@
 service: () -> {
     createProposal: (text, text, int8, text, text, nat32, record {token_amount:int8; to_address:text; from_address:text}) -> (record {id:text; title:text; description:text; deadline:nat32; execution:record {token_amount:int8; to_address:text; from_address:text}; block:text; contract_address:text; amount:int8});
-    ethGetBalance: (text) -> (text);
-    ethGetBlockByNumber: (nat32) -> (text);
+    ethGetCurrentBlock: () -> (text);
+    ethGetTokenBalance: (text, text, text) -> (text);
     ethTransform: (record {context:vec nat8; response:record {status:nat; body:vec nat8; headers:vec record {value:text; name:text}}}) -> (record {status:nat; body:vec nat8; headers:vec record {value:text; name:text}}) query;
     getAllProposals: () -> (vec record {id:text; title:text; description:text; deadline:nat32; execution:record {token_amount:int8; to_address:text; from_address:text}; block:text; contract_address:text; amount:int8}) query;
     getProposal: (text) -> (opt record {id:text; title:text; description:text; deadline:nat32; execution:record {token_amount:int8; to_address:text; from_address:text}; block:text; contract_address:text; amount:int8}) query;

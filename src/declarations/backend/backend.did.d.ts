@@ -31,8 +31,8 @@ export interface _SERVICE {
       'amount' : number,
     }
   >,
-  'ethGetBalance' : ActorMethod<[string], string>,
-  'ethGetBlockByNumber' : ActorMethod<[number], string>,
+  'ethGetCurrentBlock' : ActorMethod<[], string>,
+  'ethGetTokenBalance' : ActorMethod<[string, string, string], string>,
   'ethTransform' : ActorMethod<
     [
       {

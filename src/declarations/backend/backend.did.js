@@ -32,8 +32,12 @@ export const idlFactory = ({ IDL }) => {
         ],
         [],
       ),
-    'ethGetBalance' : IDL.Func([IDL.Text], [IDL.Text], []),
-    'ethGetBlockByNumber' : IDL.Func([IDL.Nat32], [IDL.Text], []),
+    'ethGetCurrentBlock' : IDL.Func([], [IDL.Text], []),
+    'ethGetTokenBalance' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text],
+        [IDL.Text],
+        [],
+      ),
     'ethTransform' : IDL.Func(
         [
           IDL.Record({
