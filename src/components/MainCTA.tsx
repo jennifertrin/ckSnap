@@ -2,8 +2,12 @@ import { useState } from "react";
 import ProposalForm from "./ProposalForm";
 import ProposalList from "./ProposalList";
 import ConnectWallet from "./ConnectWallet";
+import { useAccount } from 'wagmi'
 
 export default function MainCTA() {
+
+  const { address, isConnected } = useAccount();
+  
   const [proposalSection, setProposalSection] = useState<boolean>(false);
   const [proposalListSection, setProposalListSection] = useState<boolean>(false);
 
@@ -19,7 +23,9 @@ export default function MainCTA() {
                 on-chain proposal summoning, voting, and execution
               </p>
               <div className="mt-10 flex items-center justify-center gap-x-4">
-                <ConnectWallet />
+                {!isConnected ? <ConnectWallet /> : 
+                <div>
+                  <h1 className="block font-sans text-5xl font-bold leading-tight tracking-normal text-inherit"></h1>
                 <button
                   onClick={() => {
                     setProposalSection(!proposalSection);
@@ -35,6 +41,7 @@ export default function MainCTA() {
                   }} className="rounded-md bg-white px-12 py-2.5 text-sm font-semibold text-gray-900 shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                   Vote
                 </button>
+                </div>}
               </div>
             </div>
           </div>
