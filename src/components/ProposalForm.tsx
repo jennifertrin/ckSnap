@@ -78,7 +78,7 @@ export default function ProposalForm() {
   ];
 
   return (
-    <form className="flex flex-col w-full m-auto">
+    <form className="flex flex-col w-full m-auto mb-8 lg:mb-16">
       <div className="block w-full">
         <div className="my-auto lg:mt-14 border-b border-gray-900/10 pb-12 px-8">
           <h2 className="text-base text-xl font-semibold leading-7 text-gray-900">
