@@ -57,8 +57,7 @@ export default Canister({
         return proposalList;
     }),
     createProposal: update([text, text, int8, text, text, nat32, Execution], Proposal, async (id, contract_address, amount, title, description, deadline, execution) => {
-        const currentTime = new Date().getTime();
-        const block = await ethGetBlockByNumber(currentTime);
+        const block = await ethGetCurrentBlock();
         const proposal : typeof Proposal = {
             id, contract_address, amount, title, description, deadline, block, execution
         }
@@ -102,8 +101,8 @@ export default Canister({
 
         return Buffer.from(httpResponse.body.buffer).toString('utf-8');
     }),
-    ethGetBlockByNumber: update([nat32], text, async (number) => {
-        return ethGetBlockByNumber(number);
+    ethGetCurrentBlock: update([], text, async () => {
+        return ethGetCurrentBlock();
     }),
     ethTransform: query([HttpTransformArgs], HttpResponse, (args) => {
         return {
@@ -164,40 +163,41 @@ export default Canister({
     })
 })
 
-async function ethGetBlockByNumber(number: number) {
-    const url = "https://rpc.ankr.com/eth";
+    async function ethGetCurrentBlock() {
+        const url = "https://rpc.ankr.com/eth";
 
         const httpResponse = await ic.call(managementCanister.http_request, {
-            args: [
-                {
-                    url,
-                    max_response_bytes: Some(2_000n),
-                    method: {
-                        post: null
-                    },
-                    headers: [],
-                    body: Some(
-                        Buffer.from(
-                            JSON.stringify({
-                                jsonrpc: '2.0',
-                                method: 'eth_getBlockByNumber',
-                                params: [`0x${number.toString(16)}`, false],
-                                id: 1
-                            }),
-                            'utf-8'
-                        )
-                    ),
-                    transform: Some({
-                        function: [ic.id(), 'ethTransform'] as [
-                            Principal,
-                            string
-                        ],
-                        context: Uint8Array.from([])
-                    })
-                }
-            ],
-            cycles: 50_000_000n
-        });
+                args: [
+                    {
+                        url,
+                        max_response_bytes: Some(2_000n),
+                        method: {
+                            post: null
+                        },
+                        headers: [],
+                        body: Some(
+                            Buffer.from(
+                                JSON.stringify({
+                                    jsonrpc: '2.0',
+                                    method: 'eth_blockNumber',
+                                    params: [],
+                                    id: 1
+                                }),
+                                'utf-8'
+                            )
+                        ),
+                        transform: Some({
+                            function: [ic.id(), 'ethTransform'] as [
+                                Principal,
+                                string
+                            ],
+                            context: Uint8Array.from([])
+                        })
+                    }
+                ],
+                cycles: 50_000_000n
+            });
 
-        return Buffer.from(httpResponse.body.buffer).toString('utf-8');
-}
+            const jsonResponse = JSON.parse(Buffer.from(httpResponse.body.buffer).toString('utf-8'));
+            return jsonResponse.result;
+    }

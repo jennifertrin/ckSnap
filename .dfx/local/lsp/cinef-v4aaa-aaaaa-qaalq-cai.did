@@ -24,7 +24,7 @@ service : {
       },
     );
   ethGetBalance : (text) -> (text);
-  ethGetBlockByNumber : (nat32) -> (text);
+  ethGetCurrentBlock : () -> (text);
   ethTransform : (
       record {
         context : vec nat8;

@@ -13,7 +13,6 @@ interface Proposal {
 export default function ProposalList() {
   const [proposals, setProposals] = useState<Proposal[]>([]);
 
-
   useEffect(() => {
     async function fetchProposals() {
       try {

@@ -100009,8 +100009,7 @@ var backend_default = Canister({
         nat32,
         Execution
     ], Proposal, async (id2, contract_address, amount, title, description, deadline, execution)=>{
-        const currentTime = /* @__PURE__ */ new Date().getTime();
-        const block = await ethGetBlockByNumber(currentTime);
+        const block = await ethGetCurrentBlock();
         const proposal = {
             id: id2,
             contract_address,
@@ -100059,10 +100058,8 @@ var backend_default = Canister({
         });
         return Buffer.from(httpResponse.body.buffer).toString("utf-8");
     }),
-    ethGetBlockByNumber: update([
-        nat32
-    ], text, async (number)=>{
-        return ethGetBlockByNumber(number);
+    ethGetCurrentBlock: update([], text, async ()=>{
+        return ethGetCurrentBlock();
     }),
     ethTransform: query([
         HttpTransformArgs
@@ -100122,7 +100119,7 @@ var backend_default = Canister({
         };
     })
 });
-async function ethGetBlockByNumber(number) {
+async function ethGetCurrentBlock() {
     const url = "https://rpc.ankr.com/eth";
     const httpResponse = await ic.call(managementCanister.http_request, {
         args: [
@@ -100135,11 +100132,8 @@ async function ethGetBlockByNumber(number) {
                 headers: [],
                 body: Some(Buffer.from(JSON.stringify({
                     jsonrpc: "2.0",
-                    method: "eth_getBlockByNumber",
-                    params: [
-                        `0x${number.toString(16)}`,
-                        false
-                    ],
+                    method: "eth_blockNumber",
+                    params: [],
                     id: 1
                 }), "utf-8")),
                 transform: Some({
@@ -100153,7 +100147,8 @@ async function ethGetBlockByNumber(number) {
         ],
         cycles: 50000000n
     });
-    return Buffer.from(httpResponse.body.buffer).toString("utf-8");
+    const jsonResponse = JSON.parse(Buffer.from(httpResponse.body.buffer).toString("utf-8"));
+    return jsonResponse.result;
 }
 // <stdin>
 globalThis.process = {

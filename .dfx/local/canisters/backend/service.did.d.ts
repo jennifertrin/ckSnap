@@ -32,7 +32,7 @@ export interface _SERVICE {
     }
   >,
   'ethGetBalance' : ActorMethod<[string], string>,
-  'ethGetBlockByNumber' : ActorMethod<[number], string>,
+  'ethGetCurrentBlock' : ActorMethod<[], string>,
   'ethTransform' : ActorMethod<
     [
       {
