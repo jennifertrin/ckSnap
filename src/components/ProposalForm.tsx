@@ -119,7 +119,7 @@ export default function ProposalForm() {
           </div>
         </div>
       </div>
-      <div className="mt-6 flex space-x-6 flex items-center justify-end mr-20">
+      <div className="mt-6 flex space-x-6 items-center justify-end mr-20">
         <button
           type="button"
           className="text-md font-semibold leading-6 text-gray-900"

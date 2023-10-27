@@ -58,7 +58,7 @@ export default function MainCTA() {
                 </div>
               )}
             </div>
-            <div className="flex mx-auto w-full lg:w-2/5">
+            <div className="flex justify-center w-full">
               {proposalSection ? <ProposalForm /> : null}
               {proposalListSection ? <ProposalList /> : null}
             </div>

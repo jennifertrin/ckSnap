@@ -11,7 +11,7 @@ export default function EmptyContainer({
 }: EmptyContainerProps) {
   return (
     <>
-      <div className="flex h-screen bg-transparent w-full">
+      <div className="flex bg-transparent w-full mt-12 justify-center">
         <div className="bg-white text-center m-auto border-2 p-8 rounded-lg">
           <h1 className="mt-4 text-3xl font-bold tracking-tight text-gray-900">
             {pageTitle}
