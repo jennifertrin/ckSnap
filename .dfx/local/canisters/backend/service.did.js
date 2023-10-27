@@ -7,7 +7,7 @@ export const idlFactory = ({ IDL }) => {
           IDL.Int8,
           IDL.Text,
           IDL.Text,
-          IDL.Nat32,
+          IDL.Int8,
           IDL.Record({
             'token_amount' : IDL.Int8,
             'to_address' : IDL.Text,

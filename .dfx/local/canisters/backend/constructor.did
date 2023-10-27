@@ -1,5 +1,5 @@
 service: () -> {
-    createProposal: (text, text, int8, text, text, nat32, record {token_amount:int8; to_address:text; from_address:text}) -> (record {id:text; title:text; description:text; deadline:int8; execution:record {token_amount:int8; to_address:text; from_address:text}; block:text; contract_address:text; amount:int8});
+    createProposal: (text, text, int8, text, text, int8, record {token_amount:int8; to_address:text; from_address:text}) -> (record {id:text; title:text; description:text; deadline:int8; execution:record {token_amount:int8; to_address:text; from_address:text}; block:text; contract_address:text; amount:int8});
     ethGetCurrentBlock: () -> (text);
     ethGetTokenBalance: (text, text, text) -> (text);
     ethTransform: (record {context:vec nat8; response:record {status:nat; body:vec nat8; headers:vec record {value:text; name:text}}}) -> (record {status:nat; body:vec nat8; headers:vec record {value:text; name:text}}) query;

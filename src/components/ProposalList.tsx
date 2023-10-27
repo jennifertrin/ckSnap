@@ -25,10 +25,7 @@ export default function ProposalList() {
   useEffect(() => {
     async function fetchProposals() {
       try {
-        console.log('getProposals');
-        console.log('backend', backend);
         const proposals = await backend.getAllProposals();
-        console.log('proposals', proposals);
         if (proposals) {
           setProposals(proposals);
         }

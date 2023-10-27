@@ -5,7 +5,7 @@ service : {
       int8,
       text,
       text,
-      nat32,
+      int8,
       record { token_amount : int8; to_address : text; from_address : text },
     ) -> (
       record {

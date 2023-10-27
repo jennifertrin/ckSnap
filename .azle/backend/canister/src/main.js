@@ -490,7 +490,7 @@ var require_buffer = __commonJS({
                     return false;
             }
         };
-        Buffer3.concat = function concat2(list, length) {
+        Buffer3.concat = function concat3(list, length) {
             if (!Array.isArray(list)) {
                 throw new TypeError('"list" argument must be an Array of Buffers');
             }
@@ -100987,13 +100987,13 @@ var Logger = class _Logger {
         }
         _logLevel = level;
     }
-    static from(version3) {
-        return new _Logger(version3);
+    static from(version4) {
+        return new _Logger(version4);
     }
-    constructor(version3){
+    constructor(version4){
         Object.defineProperty(this, "version", {
             enumerable: true,
-            value: version3,
+            value: version4,
             writable: false
         });
     }
@@ -101098,6 +101098,235 @@ function isHexString(value, length) {
 function keccak256(data) {
     return "0x" + import_js_sha3.default.keccak_256(arrayify(data));
 }
+// node_modules/ethers/lib.esm/_version.js
+var version3 = "6.8.0";
+// node_modules/ethers/lib.esm/utils/properties.js
+function checkType(value, type, name) {
+    const types = type.split("|").map((t)=>t.trim());
+    for(let i = 0; i < types.length; i++){
+        switch(type){
+            case "any":
+                return;
+            case "bigint":
+            case "boolean":
+            case "number":
+            case "string":
+                if (typeof value === type) {
+                    return;
+                }
+        }
+    }
+    const error = new Error(`invalid value for type ${type}`);
+    error.code = "INVALID_ARGUMENT";
+    error.argument = `value.${name}`;
+    error.value = value;
+    throw error;
+}
+function defineProperties(target, values, types) {
+    for(let key in values){
+        let value = values[key];
+        const type = types ? types[key] : null;
+        if (type) {
+            checkType(value, type, key);
+        }
+        Object.defineProperty(target, key, {
+            enumerable: true,
+            value,
+            writable: false
+        });
+    }
+}
+// node_modules/ethers/lib.esm/utils/errors.js
+function stringify(value) {
+    if (value == null) {
+        return "null";
+    }
+    if (Array.isArray(value)) {
+        return "[ " + value.map(stringify).join(", ") + " ]";
+    }
+    if (value instanceof Uint8Array) {
+        const HEX2 = "0123456789abcdef";
+        let result = "0x";
+        for(let i = 0; i < value.length; i++){
+            result += HEX2[value[i] >> 4];
+            result += HEX2[value[i] & 15];
+        }
+        return result;
+    }
+    if (typeof value === "object" && typeof value.toJSON === "function") {
+        return stringify(value.toJSON());
+    }
+    switch(typeof value){
+        case "boolean":
+        case "symbol":
+            return value.toString();
+        case "bigint":
+            return BigInt(value).toString();
+        case "number":
+            return value.toString();
+        case "string":
+            return JSON.stringify(value);
+        case "object":
+            {
+                const keys = Object.keys(value);
+                keys.sort();
+                return "{ " + keys.map((k)=>`${stringify(k)}: ${stringify(value[k])}`).join(", ") + " }";
+            }
+    }
+    return `[ COULD NOT SERIALIZE ]`;
+}
+function makeError(message, code, info) {
+    let shortMessage = message;
+    {
+        const details = [];
+        if (info) {
+            if ("message" in info || "code" in info || "name" in info) {
+                throw new Error(`value will overwrite populated values: ${stringify(info)}`);
+            }
+            for(const key in info){
+                if (key === "shortMessage") {
+                    continue;
+                }
+                const value = info[key];
+                details.push(key + "=" + stringify(value));
+            }
+        }
+        details.push(`code=${code}`);
+        details.push(`version=${version3}`);
+        if (details.length) {
+            message += " (" + details.join(", ") + ")";
+        }
+    }
+    let error;
+    switch(code){
+        case "INVALID_ARGUMENT":
+            error = new TypeError(message);
+            break;
+        case "NUMERIC_FAULT":
+        case "BUFFER_OVERRUN":
+            error = new RangeError(message);
+            break;
+        default:
+            error = new Error(message);
+    }
+    defineProperties(error, {
+        code
+    });
+    if (info) {
+        Object.assign(error, info);
+    }
+    if (error.shortMessage == null) {
+        defineProperties(error, {
+            shortMessage
+        });
+    }
+    return error;
+}
+function assert(check, message, code, info) {
+    if (!check) {
+        throw makeError(message, code, info);
+    }
+}
+function assertArgument(check, message, name, value) {
+    assert(check, message, "INVALID_ARGUMENT", {
+        argument: name,
+        value
+    });
+}
+var _normalizeForms = [
+    "NFD",
+    "NFC",
+    "NFKD",
+    "NFKC"
+].reduce((accum, form)=>{
+    try {
+        if ("test".normalize(form) !== "test") {
+            throw new Error("bad");
+        }
+        ;
+        if (form === "NFD") {
+            const check = String.fromCharCode(233).normalize("NFD");
+            const expected = String.fromCharCode(101, 769);
+            if (check !== expected) {
+                throw new Error("broken");
+            }
+        }
+        accum.push(form);
+    } catch (error) {}
+    return accum;
+}, []);
+function assertNormalize(form) {
+    assert(_normalizeForms.indexOf(form) >= 0, "platform missing String.prototype.normalize", "UNSUPPORTED_OPERATION", {
+        operation: "String.prototype.normalize",
+        info: {
+            form
+        }
+    });
+}
+// node_modules/ethers/lib.esm/utils/utf8.js
+function errorFunc(reason, offset, bytes2, output2, badCodepoint) {
+    assertArgument(false, `invalid codepoint at offset ${offset}; ${reason}`, "bytes", bytes2);
+}
+function ignoreFunc(reason, offset, bytes2, output2, badCodepoint) {
+    if (reason === "BAD_PREFIX" || reason === "UNEXPECTED_CONTINUE") {
+        let i = 0;
+        for(let o = offset + 1; o < bytes2.length; o++){
+            if (bytes2[o] >> 6 !== 2) {
+                break;
+            }
+            i++;
+        }
+        return i;
+    }
+    if (reason === "OVERRUN") {
+        return bytes2.length - offset - 1;
+    }
+    return 0;
+}
+function replaceFunc(reason, offset, bytes2, output2, badCodepoint) {
+    if (reason === "OVERLONG") {
+        assertArgument(typeof badCodepoint === "number", "invalid bad code point for replacement", "badCodepoint", badCodepoint);
+        output2.push(badCodepoint);
+        return 0;
+    }
+    output2.push(65533);
+    return ignoreFunc(reason, offset, bytes2, output2, badCodepoint);
+}
+var Utf8ErrorFuncs = Object.freeze({
+    error: errorFunc,
+    ignore: ignoreFunc,
+    replace: replaceFunc
+});
+function toUtf8Bytes(str, form) {
+    if (form != null) {
+        assertNormalize(form);
+        str = str.normalize(form);
+    }
+    let result = [];
+    for(let i = 0; i < str.length; i++){
+        const c = str.charCodeAt(i);
+        if (c < 128) {
+            result.push(c);
+        } else if (c < 2048) {
+            result.push(c >> 6 | 192);
+            result.push(c & 63 | 128);
+        } else if ((c & 64512) == 55296) {
+            i++;
+            const c2 = str.charCodeAt(i);
+            assertArgument(i < str.length && (c2 & 64512) === 56320, "invalid surrogate pair", "str", str);
+            const pair = 65536 + ((c & 1023) << 10) + (c2 & 1023);
+            result.push(pair >> 18 | 240);
+            result.push(pair >> 12 & 63 | 128);
+            result.push(pair >> 6 & 63 | 128);
+            result.push(pair & 63 | 128);
+        } else {
+            result.push(c >> 12 | 224);
+            result.push(c >> 6 & 63 | 128);
+            result.push(c & 63 | 128);
+        }
+    }
+    return new Uint8Array(result);
+}
 // backend/index.ts
 var PublicKey = Record2({
     publicKey: blob
@@ -101137,7 +101366,7 @@ var backend_default = Canister({
         int8,
         text,
         text,
-        nat32,
+        int8,
         Execution
     ], Proposal, async (id2, contract_address, amount, title, description, deadline, execution)=>{
         const block = await ethGetCurrentBlock();
@@ -101288,9 +101517,6 @@ async function ethGetCurrentBlock() {
     });
     const jsonResponse = JSON.parse(Buffer.from(httpResponse.body.buffer).toString("utf-8"));
     return jsonResponse.result;
-}
-function toUtf8Bytes(arg0) {
-    throw new Error("Function not implemented.");
 }
 // <stdin>
 globalThis.process = {

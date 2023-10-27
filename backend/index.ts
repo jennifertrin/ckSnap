@@ -3,7 +3,6 @@ import {
     Canister,
     ic,
     int8,
-    nat32,
     None,
     Opt,
     Principal,
@@ -21,6 +20,7 @@ import {
     managementCanister
 } from 'azle/canisters/management';
 import { keccak256 } from "@ethersproject/keccak256";
+import { toUtf8Bytes } from "ethers";
 
 const PublicKey = Record({
     publicKey: blob
@@ -57,7 +57,7 @@ export default Canister({
         const proposalList = proposals.values();
         return proposalList;
     }),
-    createProposal: update([text, text, int8, text, text, nat32, Execution], Proposal, async (id, contract_address, amount, title, description, deadline, execution) => {
+    createProposal: update([text, text, int8, text, text, int8, Execution], Proposal, async (id, contract_address, amount, title, description, deadline, execution) => {
         const block = await ethGetCurrentBlock();
         const proposal : typeof Proposal = {
             id, contract_address, amount, title, description, deadline, block, execution
@@ -207,7 +207,3 @@ export default Canister({
             const jsonResponse = JSON.parse(Buffer.from(httpResponse.body.buffer).toString('utf-8'));
             return jsonResponse.result;
     }
-
-function toUtf8Bytes(arg0: string): import("@ethersproject/bytes").BytesLike {
-    throw new Error('Function not implemented.');
-}
