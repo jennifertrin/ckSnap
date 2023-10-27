@@ -32,9 +32,10 @@ export default function MainCTA() {
                 </div>
               ) : (
                 <div>
-                  <h1 className="block font-sans text-5xl font-bold leading-tight tracking-normal text-inherit">
-                    {address}
+                  <h1 className="font-sans text-xl font-normal leading-tight tracking-normal mb-2 lg:mb-8">
+                    <span className="font-bold">Wallet Address:</span> {address}
                   </h1>
+                  <div className="block justify-center flex mx-auto gap-x-4">
                   <button
                     onClick={() => {
                       setProposalSection(!proposalSection);
@@ -53,6 +54,7 @@ export default function MainCTA() {
                   >
                     Vote
                   </button>
+                  </div>
                 </div>
               )}
             </div>
