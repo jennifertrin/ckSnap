@@ -12,7 +12,7 @@ service : {
         id : text;
         title : text;
         description : text;
-        deadline : nat32;
+        deadline : int8;
         execution : record {
           token_amount : int8;
           to_address : text;
@@ -46,7 +46,7 @@ service : {
         id : text;
         title : text;
         description : text;
-        deadline : nat32;
+        deadline : int8;
         execution : record {
           token_amount : int8;
           to_address : text;
@@ -62,7 +62,7 @@ service : {
         id : text;
         title : text;
         description : text;
-        deadline : nat32;
+        deadline : int8;
         execution : record {
           token_amount : int8;
           to_address : text;

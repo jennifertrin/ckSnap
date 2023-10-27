@@ -101116,7 +101116,7 @@ var Proposal = Record2({
     amount: int8,
     title: text,
     description: text,
-    deadline: nat32,
+    deadline: int8,
     block: text,
     execution: Execution
 });

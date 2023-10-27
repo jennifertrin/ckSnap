@@ -2,12 +2,21 @@ import { useEffect, useState } from "react";
 import { backend } from "../declarations/backend";
 import EmptyContainer from "./EmptyContainer";
 
+interface Execution  {
+  to_address: string,
+  from_address: string,
+  token_amount: number
+}
+
 interface Proposal {
-  id: string,
-  contract_address: string,
-  amount: number,
-  title: string,
-  description: string
+   id: string,
+   contract_address: string,
+   amount: number,
+   title: string,
+   description: string,
+   deadline: number,
+   block: string,
+   execution: Execution,
 }
 
 export default function ProposalList() {
@@ -16,7 +25,10 @@ export default function ProposalList() {
   useEffect(() => {
     async function fetchProposals() {
       try {
+        console.log('getProposals');
+        console.log('backend', backend);
         const proposals = await backend.getAllProposals();
+        console.log('proposals', proposals);
         if (proposals) {
           setProposals(proposals);
         }

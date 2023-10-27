@@ -19,7 +19,7 @@ export const idlFactory = ({ IDL }) => {
             'id' : IDL.Text,
             'title' : IDL.Text,
             'description' : IDL.Text,
-            'deadline' : IDL.Nat32,
+            'deadline' : IDL.Int8,
             'execution' : IDL.Record({
               'token_amount' : IDL.Int8,
               'to_address' : IDL.Text,
@@ -70,7 +70,7 @@ export const idlFactory = ({ IDL }) => {
               'id' : IDL.Text,
               'title' : IDL.Text,
               'description' : IDL.Text,
-              'deadline' : IDL.Nat32,
+              'deadline' : IDL.Int8,
               'execution' : IDL.Record({
                 'token_amount' : IDL.Int8,
                 'to_address' : IDL.Text,
@@ -92,7 +92,7 @@ export const idlFactory = ({ IDL }) => {
               'id' : IDL.Text,
               'title' : IDL.Text,
               'description' : IDL.Text,
-              'deadline' : IDL.Nat32,
+              'deadline' : IDL.Int8,
               'execution' : IDL.Record({
                 'token_amount' : IDL.Int8,
                 'to_address' : IDL.Text,
