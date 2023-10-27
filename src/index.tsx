@@ -9,7 +9,7 @@ import { MetaMaskProvider } from '@metamask/sdk-react';
 import { WagmiConfig } from 'wagmi'
 import { arbitrum, mainnet } from 'wagmi/chains'
 
-const projectId = 'YOUR_PROJECT_ID'
+const projectId = process.env.REACT_APP_WALLET_CONNECT || '';
 
 const metadata = {
   name: 'Web3Modal',
