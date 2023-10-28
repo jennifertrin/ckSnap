@@ -56,6 +56,7 @@ const VoteDecision = Variant({
 });
 
 const Vote = Record({
+    voteId: text,
     proposalId: text,
     decision: VoteDecision,
     address: text,
@@ -81,7 +82,7 @@ export default Canister({
        proposals.insert(id, proposal);
        return proposal;
     }),
-    voteOnProposal: update([text, VoteDecision, text, text], Vote, async (proposalId, decision, address, signature) => {
+    voteOnProposal: update([text, text, VoteDecision, text, text], Vote, async (voteId, proposalId, decision, address, signature) => {
         const proposalDetails = await getProposal(proposalId);
         const message = `Sign to check voting eligibility for Proposal ${proposalId} for DAO ${proposalDetails.contractAddress}`;
         const isVerified = await verifySignatureWallet(message, signature, address);
@@ -90,11 +91,17 @@ export default Canister({
             return new Error('Not eligible to vote');
         } else if (isVerified) {
             const vote : typeof Vote = {
-                proposalId, decision, address, signature
+                voteId, proposalId, decision, address, signature
             }
-           votes.insert(proposalId, decision, address, signature);
+           votes.insert(vote);
            return votes;
         }
+    }),
+    getVoteById: query([text], Opt(Vote), (voteId) => {
+        return getVote(voteId);
+    }),
+    getVoteByProposalId: query([text], Vec(Vote), (proposalId) => {
+        return getVote(proposalId);
     }),
     ethGetTokenBalance: update([text, text, text], text, async (ethereumAddress, contractAddress, blockNumber) => {
         const url = "https://rpc.ankr.com/eth";
@@ -246,4 +253,8 @@ async function verifySignatureWallet(signature: string, message: string, address
 
 async function getProposal(id: text) {
     return proposals.get(id);
+}
+
+async function getVote(id: text) {
+    return votes.get(id);
 }
