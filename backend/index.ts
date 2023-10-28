@@ -1,5 +1,6 @@
 import {
     blob,
+    bool,
     Canister,
     ic,
     int8,
@@ -12,6 +13,7 @@ import {
     StableBTreeMap,
     text,
     update,
+    Variant,
     Vec
 } from 'azle';
 import {
@@ -20,7 +22,7 @@ import {
     managementCanister
 } from 'azle/canisters/management';
 import { keccak256 } from "@ethersproject/keccak256";
-import { toUtf8Bytes } from "ethers";
+import { toUtf8Bytes, ethers } from "ethers";
 
 const PublicKey = Record({
     publicKey: blob
@@ -37,7 +39,7 @@ const Execution = Record({
 })
 
 const Proposal = Record({
-    id: text,
+    id: int8,
     contract_address: text,
     amount: int8,
     title: text,
@@ -47,23 +49,63 @@ const Proposal = Record({
     execution: Execution,
 })
 
+const VoteDecision = Variant({
+    Yes: bool,
+    No: bool,
+    Abstain: bool,
+});
+
+const Vote = Record({
+    voteId: int8,
+    proposalId: int8,
+    decision: VoteDecision,
+    address: text,
+    signature: text
+})
+
 let proposals = StableBTreeMap(text, Proposal, 0);
+let votes = StableBTreeMap(text, Vote, 0);
 
 export default Canister({
-    getProposal: query([text], Opt(Proposal), (id) => {
-        return proposals.get(id);
+    getProposal: query([int8], Opt(Proposal), (id) => {
+        return getProposal(id);
     }),
     getAllProposals: query([], Vec(Proposal), () => {
         const proposalList = proposals.values();
         return proposalList;
     }),
-    createProposal: update([text, text, int8, text, text, int8, Execution], Proposal, async (id, contract_address, amount, title, description, deadline, execution) => {
+    createProposal: update([text, int8, text, text, int8, Execution], Proposal, async (contract_address, amount, title, description, deadline, execution) => {
         const block = await ethGetCurrentBlock();
+        let proposalNumber = await proposals.size();
+        const id = proposalNumber++;
         const proposal : typeof Proposal = {
             id, contract_address, amount, title, description, deadline, block, execution
         }
        proposals.insert(id, proposal);
        return proposal;
+    }),
+    voteOnProposal: update([int8, VoteDecision, text, text], Vote, async (proposalId, decision, address, signature) => {
+        const proposalDetails = await getProposal(proposalId);
+        let voteNumber = await votes.size();
+        const voteId = voteNumber++;
+        const message = `Sign to check voting eligibility for Proposal ${proposalId} for DAO ${proposalDetails.contractAddress}`;
+        const isVerified = await verifySignatureWallet(message, signature, address);
+
+        if (!isVerified) {
+            return new Error('Not eligible to vote');
+        } else if (isVerified) {
+            const vote : typeof Vote = {
+                voteId, proposalId, decision, address, signature
+            }
+           votes.insert(vote);
+           return votes;
+        }
+    }),
+    getVoteById: query([int8], Opt(Vote), (voteId) => {
+        return getVote(voteId);
+    }),
+    getVoteByProposalId: query([int8], Vec(Vote), (proposalId) => {
+        return getVote(proposalId);
     }),
     ethGetTokenBalance: update([text, text, text], text, async (ethereumAddress, contractAddress, blockNumber) => {
         const url = "https://rpc.ankr.com/eth";
@@ -206,4 +248,17 @@ async function ethGetCurrentBlock() {
 
         const jsonResponse = JSON.parse(Buffer.from(httpResponse.body.buffer).toString('utf-8'));
         return jsonResponse.result;
+}
+
+async function verifySignatureWallet(signature: string, message: string, address: string): Promise<boolean> {
+    const recoveredAddress = await ethers.verifyMessage(message, signature);
+    return recoveredAddress === address;
+  }
+
+async function getProposal(id: int8) {
+    return proposals.get(id);
+}
+
+async function getVote(id: int8) {
+    return votes.get(id);
 }
