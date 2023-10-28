@@ -56,8 +56,8 @@ const VoteDecision = Variant({
 });
 
 const Vote = Record({
-    voteId: text,
-    proposalId: text,
+    voteId: int8,
+    proposalId: int8,
     decision: VoteDecision,
     address: text,
     signature: text
@@ -67,23 +67,27 @@ let proposals = StableBTreeMap(text, Proposal, 0);
 let votes = StableBTreeMap(text, Vote, 0);
 
 export default Canister({
-    getProposal: query([text], Opt(Proposal), (id) => {
+    getProposal: query([int8], Opt(Proposal), (id) => {
         return getProposal(id);
     }),
     getAllProposals: query([], Vec(Proposal), () => {
         const proposalList = proposals.values();
         return proposalList;
     }),
-    createProposal: update([int8, text, int8, text, text, int8, Execution], Proposal, async (id, contract_address, amount, title, description, deadline, execution) => {
+    createProposal: update([text, int8, text, text, int8, Execution], Proposal, async (contract_address, amount, title, description, deadline, execution) => {
         const block = await ethGetCurrentBlock();
+        let proposalNumber = await proposals.size();
+        const id = proposalNumber++;
         const proposal : typeof Proposal = {
             id, contract_address, amount, title, description, deadline, block, execution
         }
        proposals.insert(id, proposal);
        return proposal;
     }),
-    voteOnProposal: update([text, text, VoteDecision, text, text], Vote, async (voteId, proposalId, decision, address, signature) => {
+    voteOnProposal: update([int8, VoteDecision, text, text], Vote, async (proposalId, decision, address, signature) => {
         const proposalDetails = await getProposal(proposalId);
+        let voteNumber = await votes.size();
+        const voteId = voteNumber++;
         const message = `Sign to check voting eligibility for Proposal ${proposalId} for DAO ${proposalDetails.contractAddress}`;
         const isVerified = await verifySignatureWallet(message, signature, address);
 
@@ -97,10 +101,10 @@ export default Canister({
            return votes;
         }
     }),
-    getVoteById: query([text], Opt(Vote), (voteId) => {
+    getVoteById: query([int8], Opt(Vote), (voteId) => {
         return getVote(voteId);
     }),
-    getVoteByProposalId: query([text], Vec(Vote), (proposalId) => {
+    getVoteByProposalId: query([int8], Vec(Vote), (proposalId) => {
         return getVote(proposalId);
     }),
     ethGetTokenBalance: update([text, text, text], text, async (ethereumAddress, contractAddress, blockNumber) => {
@@ -251,10 +255,10 @@ async function verifySignatureWallet(signature: string, message: string, address
     return recoveredAddress === address;
   }
 
-async function getProposal(id: text) {
+async function getProposal(id: int8) {
     return proposals.get(id);
 }
 
-async function getVote(id: text) {
+async function getVote(id: int8) {
     return votes.get(id);
 }
