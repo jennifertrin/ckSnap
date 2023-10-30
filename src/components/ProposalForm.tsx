@@ -128,7 +128,7 @@ export default function ProposalForm() {
         </button>
         <button
           type="submit"
-          onSubmit={async (e) => { e.preventDefault(); return await backend.createProposal("1", contractAddress, tokenAmount, proposalTitle, proposalDescription, proposalExpiration, executionVariables)}}
+          onSubmit={async (e) => { e.preventDefault(); return await backend.createProposal(contractAddress, tokenAmount, proposalTitle, proposalDescription, proposalExpiration, executionVariables)}}
           className="rounded-md bg-indigo-600 px-8 py-3 text-md font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
         >
           Save
