@@ -53,6 +53,7 @@ export default function ProposalList() {
                   You need to own {proposal.amount.toString()} token from Ethereum contract address {proposal.contract_address}
                 </p>
               </div>
+              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Vote</button>
             </div>
           ))
         : <EmptyContainer pageTitle={'No proposals open at the moment'} pageMessage={'Create a proposal now'}></EmptyContainer>}

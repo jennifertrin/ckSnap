@@ -92,7 +92,7 @@ export default Canister({
         const isVerified = await verifySignatureWallet(message, signature, address);
 
         if (!isVerified) {
-            return new Error('Not eligible to vote');
+            ic.trap('Not eligible to vote');
         } else if (isVerified) {
             const vote : typeof Vote = {
                 voteId, proposalId, decision, address, signature
@@ -251,8 +251,13 @@ async function ethGetCurrentBlock() {
 }
 
 async function verifySignatureWallet(signature: string, message: string, address: string): Promise<boolean> {
-    const recoveredAddress = await ethers.verifyMessage(message, signature);
-    return recoveredAddress === address;
+    const { ethers } = require('ethers');
+
+    const signatureBuffer = ethers.utils.arrayify(signature);
+    const messageBuffer = ethers.utils.arrayify(message);
+
+    const isVerified = ethers.utils.verifyMessage(messageBuffer, signatureBuffer, address);
+    return isVerified;
   }
 
 async function getProposal(id: int8) {
