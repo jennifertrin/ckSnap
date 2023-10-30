@@ -9,7 +9,7 @@ interface Execution  {
 }
 
 interface Proposal {
-   id: string,
+   id: number,
    contract_address: string,
    amount: number,
    title: string,
