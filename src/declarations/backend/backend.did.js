@@ -3,30 +3,30 @@ export const idlFactory = ({ IDL }) => {
     'createProposal' : IDL.Func(
         [
           IDL.Text,
-          IDL.Int8,
+          IDL.Int32,
           IDL.Text,
           IDL.Text,
           IDL.Int8,
           IDL.Record({
-            'token_amount' : IDL.Int8,
+            'token_amount' : IDL.Int32,
             'to_address' : IDL.Text,
             'from_address' : IDL.Text,
           }),
         ],
         [
           IDL.Record({
-            'id' : IDL.Int8,
+            'id' : IDL.Int32,
             'title' : IDL.Text,
             'description' : IDL.Text,
-            'deadline' : IDL.Int8,
+            'deadline' : IDL.Int32,
             'execution' : IDL.Record({
-              'token_amount' : IDL.Int8,
+              'token_amount' : IDL.Int32,
               'to_address' : IDL.Text,
               'from_address' : IDL.Text,
             }),
             'block' : IDL.Text,
             'contract_address' : IDL.Text,
-            'amount' : IDL.Int8,
+            'amount' : IDL.Int32,
           }),
         ],
         [],
@@ -66,47 +66,47 @@ export const idlFactory = ({ IDL }) => {
         [
           IDL.Vec(
             IDL.Record({
-              'id' : IDL.Int8,
+              'id' : IDL.Int32,
               'title' : IDL.Text,
               'description' : IDL.Text,
-              'deadline' : IDL.Int8,
+              'deadline' : IDL.Int32,
               'execution' : IDL.Record({
-                'token_amount' : IDL.Int8,
+                'token_amount' : IDL.Int32,
                 'to_address' : IDL.Text,
                 'from_address' : IDL.Text,
               }),
               'block' : IDL.Text,
               'contract_address' : IDL.Text,
-              'amount' : IDL.Int8,
+              'amount' : IDL.Int32,
             })
           ),
         ],
         ['query'],
       ),
     'getProposal' : IDL.Func(
-        [IDL.Int8],
+        [IDL.Int32],
         [
           IDL.Opt(
             IDL.Record({
-              'id' : IDL.Int8,
+              'id' : IDL.Int32,
               'title' : IDL.Text,
               'description' : IDL.Text,
-              'deadline' : IDL.Int8,
+              'deadline' : IDL.Int32,
               'execution' : IDL.Record({
-                'token_amount' : IDL.Int8,
+                'token_amount' : IDL.Int32,
                 'to_address' : IDL.Text,
                 'from_address' : IDL.Text,
               }),
               'block' : IDL.Text,
               'contract_address' : IDL.Text,
-              'amount' : IDL.Int8,
+              'amount' : IDL.Int32,
             })
           ),
         ],
         ['query'],
       ),
     'getVoteById' : IDL.Func(
-        [IDL.Int8],
+        [IDL.Int32],
         [
           IDL.Opt(
             IDL.Record({
@@ -116,7 +116,7 @@ export const idlFactory = ({ IDL }) => {
                 'Yes' : IDL.Bool,
                 'Abstain' : IDL.Bool,
               }),
-              'voteId' : IDL.Int8,
+              'voteId' : IDL.Int32,
               'address' : IDL.Text,
               'proposalId' : IDL.Int8,
             })
@@ -125,7 +125,7 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'getVoteByProposalId' : IDL.Func(
-        [IDL.Int8],
+        [IDL.Int32],
         [
           IDL.Vec(
             IDL.Record({
@@ -135,7 +135,7 @@ export const idlFactory = ({ IDL }) => {
                 'Yes' : IDL.Bool,
                 'Abstain' : IDL.Bool,
               }),
-              'voteId' : IDL.Int8,
+              'voteId' : IDL.Int32,
               'address' : IDL.Text,
               'proposalId' : IDL.Int8,
             })
@@ -155,7 +155,7 @@ export const idlFactory = ({ IDL }) => {
       ),
     'voteOnProposal' : IDL.Func(
         [
-          IDL.Int8,
+          IDL.Int32,
           IDL.Variant({
             'No' : IDL.Bool,
             'Yes' : IDL.Bool,
@@ -172,7 +172,7 @@ export const idlFactory = ({ IDL }) => {
               'Yes' : IDL.Bool,
               'Abstain' : IDL.Bool,
             }),
-            'voteId' : IDL.Int8,
+            'voteId' : IDL.Int32,
             'address' : IDL.Text,
             'proposalId' : IDL.Int8,
           }),

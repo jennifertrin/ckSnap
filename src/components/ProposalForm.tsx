@@ -72,10 +72,20 @@ export default function ProposalForm() {
     {
       label: "Number of Tokens (Payment)",
       id: "proposalTokenPayment",
+      type: "number",
       value: proposalTokenPayment,
       setFunction: setProposalTokenPayment
     },
   ];
+
+  function createProposal() {
+    try {
+    const proposal = backend.createProposal(contractAddress, tokenAmount, proposalTitle, proposalDescription, proposalExpiration, executionVariables)
+    return proposal;
+    } catch(error) {
+      console.error('Error with creating proposal:', error);
+    }
+  }
 
   return (
     <form className="flex flex-col w-full m-auto mb-8 lg:mb-16">
@@ -127,8 +137,7 @@ export default function ProposalForm() {
           Cancel
         </button>
         <button
-          type="submit"
-          onSubmit={async (e) => { e.preventDefault(); return await backend.createProposal(contractAddress, tokenAmount, proposalTitle, proposalDescription, proposalExpiration, executionVariables)}}
+          onClick={ (e) => { e.preventDefault(); createProposal() }}
           className="rounded-md bg-indigo-600 px-8 py-3 text-md font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
         >
           Save
