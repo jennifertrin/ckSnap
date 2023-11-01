@@ -20,14 +20,14 @@ interface Proposal {
 }
 
 export default function ProposalList() {
-  const [proposals, setProposals] = useState<Proposal[]>([]);
+  const [newProposals, setNewProposals] = useState<Proposal[]>([]);
 
   useEffect(() => {
     async function fetchProposals() {
       try {
         const proposals = await backend.getAllProposals();
         if (proposals) {
-          setProposals(proposals);
+          setNewProposals(proposals);
         }
       } catch (error) {
         console.error("Error fetching proposals:", error);
@@ -38,8 +38,8 @@ export default function ProposalList() {
 
   return (
     <div>
-      {proposals.length > 0
-        ? proposals.map((proposal) => (
+      {newProposals.length > 0
+        ? newProposals.map((proposal) => (
             <div
               key={proposal.title}
               className="max-w-sm rounded overflow-hidden shadow-lg"

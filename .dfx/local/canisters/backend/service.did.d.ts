@@ -5,7 +5,6 @@ export interface _SERVICE {
   'createProposal' : ActorMethod<
     [
       string,
-      string,
       number,
       string,
       string,
@@ -17,7 +16,7 @@ export interface _SERVICE {
       },
     ],
     {
-      'id' : string,
+      'id' : number,
       'title' : string,
       'description' : string,
       'deadline' : number,
@@ -54,7 +53,7 @@ export interface _SERVICE {
     [],
     Array<
       {
-        'id' : string,
+        'id' : number,
         'title' : string,
         'description' : string,
         'deadline' : number,
@@ -70,10 +69,10 @@ export interface _SERVICE {
     >
   >,
   'getProposal' : ActorMethod<
-    [string],
+    [number],
     [] | [
       {
-        'id' : string,
+        'id' : number,
         'title' : string,
         'description' : string,
         'deadline' : number,
@@ -88,9 +87,56 @@ export interface _SERVICE {
       }
     ]
   >,
+  'getVoteById' : ActorMethod<
+    [number],
+    [] | [
+      {
+        'signature' : string,
+        'decision' : { 'No' : boolean } |
+          { 'Yes' : boolean } |
+          { 'Abstain' : boolean },
+        'voteId' : number,
+        'address' : string,
+        'proposalId' : number,
+      }
+    ]
+  >,
+  'getVoteByProposalId' : ActorMethod<
+    [number],
+    Array<
+      {
+        'signature' : string,
+        'decision' : { 'No' : boolean } |
+          { 'Yes' : boolean } |
+          { 'Abstain' : boolean },
+        'voteId' : number,
+        'address' : string,
+        'proposalId' : number,
+      }
+    >
+  >,
   'publicKey' : ActorMethod<[], { 'publicKey' : Uint8Array | number[] }>,
   'sign' : ActorMethod<
     [Uint8Array | number[]],
     { 'signature' : Uint8Array | number[] }
+  >,
+  'voteOnProposal' : ActorMethod<
+    [
+      number,
+      { 'No' : boolean } |
+        { 'Yes' : boolean } |
+        { 'Abstain' : boolean },
+      string,
+      string,
+    ],
+    {
+      'signature' : string,
+      'decision' : { 'No' : boolean } |
+        { 'Yes' : boolean } |
+        { 'Abstain' : boolean },
+      'voteId' : number,
+      'address' : string,
+      'proposalId' : number,
+    }
   >,
 }

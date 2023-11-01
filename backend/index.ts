@@ -3,6 +3,7 @@ import {
     bool,
     Canister,
     ic,
+    int32,
     int8,
     None,
     Opt,
@@ -35,16 +36,16 @@ const Signature = Record({
 const Execution = Record({
    to_address: text,
    from_address: text,
-   token_amount: int8
+   token_amount: int32
 })
 
 const Proposal = Record({
-    id: int8,
+    id: int32,
     contract_address: text,
-    amount: int8,
+    amount: int32,
     title: text,
     description: text,
-    deadline: int8,
+    deadline: int32,
     block: text,
     execution: Execution,
 })
@@ -56,27 +57,27 @@ const VoteDecision = Variant({
 });
 
 const Vote = Record({
-    voteId: int8,
+    voteId: int32,
     proposalId: int8,
     decision: VoteDecision,
     address: text,
     signature: text
 })
 
-let proposals = StableBTreeMap(text, Proposal, 0);
-let votes = StableBTreeMap(text, Vote, 0);
+let proposals = StableBTreeMap(int32, Proposal, 0);
+let votes = StableBTreeMap(int32, Vote, 0);
 
 export default Canister({
-    getProposal: query([int8], Opt(Proposal), (id) => {
+    getProposal: query([int32], Opt(Proposal), (id) => {
         return getProposal(id);
     }),
     getAllProposals: query([], Vec(Proposal), () => {
         const proposalList = proposals.values();
         return proposalList;
     }),
-    createProposal: update([text, int8, text, text, int8, Execution], Proposal, async (contract_address, amount, title, description, deadline, execution) => {
+    createProposal: update([text, int32, text, text, int8, Execution], Proposal, async (contract_address, amount, title, description, deadline, execution) => {
         const block = await ethGetCurrentBlock();
-        let proposalNumber = await proposals.size();
+        let proposalNumber = Number(proposals.len());
         const id = proposalNumber++;
         const proposal : typeof Proposal = {
             id, contract_address, amount, title, description, deadline, block, execution
@@ -84,9 +85,9 @@ export default Canister({
        proposals.insert(id, proposal);
        return proposal;
     }),
-    voteOnProposal: update([int8, VoteDecision, text, text], Vote, async (proposalId, decision, address, signature) => {
+    voteOnProposal: update([int32, VoteDecision, text, text], Vote, async (proposalId, decision, address, signature) => {
         const proposalDetails = await getProposal(proposalId);
-        let voteNumber = await votes.size();
+        let voteNumber = Number(votes.len());
         const voteId = voteNumber++;
         const message = `Sign to check voting eligibility for Proposal ${proposalId} for DAO ${proposalDetails.contractAddress}`;
         const isVerified = await verifySignatureWallet(message, signature, address);
@@ -101,10 +102,10 @@ export default Canister({
            return votes;
         }
     }),
-    getVoteById: query([int8], Opt(Vote), (voteId) => {
+    getVoteById: query([int32], Opt(Vote), (voteId) => {
         return getVote(voteId);
     }),
-    getVoteByProposalId: query([int8], Vec(Vote), (proposalId) => {
+    getVoteByProposalId: query([int32], Vec(Vote), (proposalId) => {
         return getVote(proposalId);
     }),
     ethGetTokenBalance: update([text, text, text], text, async (ethereumAddress, contractAddress, blockNumber) => {
@@ -260,10 +261,10 @@ async function verifySignatureWallet(signature: string, message: string, address
     return isVerified;
   }
 
-async function getProposal(id: int8) {
+async function getProposal(id: int32) {
     return proposals.get(id);
 }
 
-async function getVote(id: int8) {
+async function getVote(id: int32) {
     return votes.get(id);
 }

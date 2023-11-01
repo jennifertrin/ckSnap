@@ -130400,6 +130400,16 @@ var AzleInt8 = class {
     }
 };
 var int8 = AzleInt8;
+// node_modules/azle/src/lib/candid/types/primitive/ints/int32.ts
+var AzleInt32 = class {
+    static getIdl() {
+        return idl_exports.Int32;
+    }
+    constructor(){
+        this._azleKind = "AzleInt32";
+    }
+};
+var int32 = AzleInt32;
 // node_modules/azle/src/lib/candid/types/primitive/nats/nat.ts
 var AzleNat = class {
     static getIdl() {
@@ -132503,15 +132513,15 @@ var Signature = Record2({
 var Execution = Record2({
     to_address: text,
     from_address: text,
-    token_amount: int8
+    token_amount: int32
 });
 var Proposal = Record2({
-    id: int8,
+    id: int32,
     contract_address: text,
-    amount: int8,
+    amount: int32,
     title: text,
     description: text,
-    deadline: int8,
+    deadline: int32,
     block: text,
     execution: Execution
 });
@@ -132521,17 +132531,17 @@ var VoteDecision = Variant2({
     Abstain: bool
 });
 var Vote = Record2({
-    voteId: int8,
+    voteId: int32,
     proposalId: int8,
     decision: VoteDecision,
     address: text,
     signature: text
 });
-var proposals = StableBTreeMap(text, Proposal, 0);
-var votes = StableBTreeMap(text, Vote, 0);
+var proposals = StableBTreeMap(int32, Proposal, 0);
+var votes = StableBTreeMap(int32, Vote, 0);
 var backend_default = Canister({
     getProposal: query([
-        int8
+        int32
     ], Opt2(Proposal), (id2)=>{
         return getProposal(id2);
     }),
@@ -132541,14 +132551,14 @@ var backend_default = Canister({
     }),
     createProposal: update([
         text,
-        int8,
+        int32,
         text,
         text,
         int8,
         Execution
     ], Proposal, async (contract_address, amount, title, description, deadline, execution)=>{
         const block = await ethGetCurrentBlock();
-        let proposalNumber = await proposals.size();
+        let proposalNumber = Number(proposals.len());
         const id2 = proposalNumber++;
         const proposal = {
             id: id2,
@@ -132564,13 +132574,13 @@ var backend_default = Canister({
         return proposal;
     }),
     voteOnProposal: update([
-        int8,
+        int32,
         VoteDecision,
         text,
         text
     ], Vote, async (proposalId, decision, address, signature)=>{
         const proposalDetails = await getProposal(proposalId);
-        let voteNumber = await votes.size();
+        let voteNumber = Number(votes.len());
         const voteId = voteNumber++;
         const message = `Sign to check voting eligibility for Proposal ${proposalId} for DAO ${proposalDetails.contractAddress}`;
         const isVerified = await verifySignatureWallet(message, signature, address);
@@ -132589,12 +132599,12 @@ var backend_default = Canister({
         }
     }),
     getVoteById: query([
-        int8
+        int32
     ], Opt2(Vote), (voteId)=>{
         return getVote(voteId);
     }),
     getVoteByProposalId: query([
-        int8
+        int32
     ], Vec2(Vote), (proposalId)=>{
         return getVote(proposalId);
     }),
