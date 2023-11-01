@@ -1,25 +1,25 @@
 service : {
   createProposal : (
       text,
-      int32,
+      int8,
       text,
       text,
       int8,
-      record { token_amount : int32; to_address : text; from_address : text },
+      record { token_amount : int8; to_address : text; from_address : text },
     ) -> (
       record {
-        id : int32;
+        id : int8;
         title : text;
         description : text;
-        deadline : int32;
+        deadline : int8;
         execution : record {
-          token_amount : int32;
+          token_amount : int8;
           to_address : text;
           from_address : text;
         };
         block : text;
         contract_address : text;
-        amount : int32;
+        amount : int8;
       },
     );
   ethGetCurrentBlock : () -> (text);
@@ -42,50 +42,50 @@ service : {
     ) query;
   getAllProposals : () -> (
       vec record {
-        id : int32;
+        id : int8;
         title : text;
         description : text;
-        deadline : int32;
+        deadline : int8;
         execution : record {
-          token_amount : int32;
+          token_amount : int8;
           to_address : text;
           from_address : text;
         };
         block : text;
         contract_address : text;
-        amount : int32;
+        amount : int8;
       },
     ) query;
-  getProposal : (int32) -> (
+  getProposal : (int8) -> (
       opt record {
-        id : int32;
+        id : int8;
         title : text;
         description : text;
-        deadline : int32;
+        deadline : int8;
         execution : record {
-          token_amount : int32;
+          token_amount : int8;
           to_address : text;
           from_address : text;
         };
         block : text;
         contract_address : text;
-        amount : int32;
+        amount : int8;
       },
     ) query;
-  getVoteById : (int32) -> (
+  getVoteById : (int8) -> (
       opt record {
         signature : text;
         decision : variant { No : bool; Yes : bool; Abstain : bool };
-        voteId : int32;
+        voteId : int8;
         address : text;
         proposalId : int8;
       },
     ) query;
-  getVoteByProposalId : (int32) -> (
+  getVoteByProposalId : (int8) -> (
       vec record {
         signature : text;
         decision : variant { No : bool; Yes : bool; Abstain : bool };
-        voteId : int32;
+        voteId : int8;
         address : text;
         proposalId : int8;
       },
@@ -93,7 +93,7 @@ service : {
   publicKey : () -> (record { publicKey : vec nat8 });
   sign : (vec nat8) -> (record { signature : vec nat8 });
   voteOnProposal : (
-      int32,
+      int8,
       variant { No : bool; Yes : bool; Abstain : bool },
       text,
       text,
@@ -101,7 +101,7 @@ service : {
       record {
         signature : text;
         decision : variant { No : bool; Yes : bool; Abstain : bool };
-        voteId : int32;
+        voteId : int8;
         address : text;
         proposalId : int8;
       },

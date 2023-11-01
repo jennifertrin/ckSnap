@@ -5,7 +5,7 @@ import EmptyContainer from "./EmptyContainer";
 interface Execution  {
   to_address: string,
   from_address: string,
-  token_amount: number
+  token_amount: number,
 }
 
 interface Proposal {

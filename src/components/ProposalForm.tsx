@@ -18,7 +18,7 @@ export default function ProposalForm() {
   }
 
   const formVariables = [
-    {
+  {
       label: "Contract Address",
       id: "contractAddress",
       placeholder: "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
@@ -51,7 +51,7 @@ export default function ProposalForm() {
     {
       label: "Proposal Expiration (in seconds)",
       id: "proposalExpiration",
-      type: "number",
+      type: "bigint",
       value: proposalExpiration,
       setFunction: setProposalExpiration
     },

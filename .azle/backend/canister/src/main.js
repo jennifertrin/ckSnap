@@ -127440,8 +127440,8 @@ var require_lib2 = __commonJS({
         });
         exports1.ethers = void 0;
         var tslib_1 = (init_tslib_es6(), __toCommonJS(tslib_es6_exports));
-        var ethers2 = tslib_1.__importStar(require_ethers());
-        exports1.ethers = ethers2;
+        var ethers = tslib_1.__importStar(require_ethers());
+        exports1.ethers = ethers;
         tslib_1.__exportStar(require_ethers(), exports1);
     }
 });
@@ -130400,16 +130400,6 @@ var AzleInt8 = class {
     }
 };
 var int8 = AzleInt8;
-// node_modules/azle/src/lib/candid/types/primitive/ints/int32.ts
-var AzleInt32 = class {
-    static getIdl() {
-        return idl_exports.Int32;
-    }
-    constructor(){
-        this._azleKind = "AzleInt32";
-    }
-};
-var int32 = AzleInt32;
 // node_modules/azle/src/lib/candid/types/primitive/nats/nat.ts
 var AzleNat = class {
     static getIdl() {
@@ -132513,15 +132503,15 @@ var Signature = Record2({
 var Execution = Record2({
     to_address: text,
     from_address: text,
-    token_amount: int32
+    token_amount: int8
 });
 var Proposal = Record2({
-    id: int32,
+    id: int8,
     contract_address: text,
-    amount: int32,
+    amount: int8,
     title: text,
     description: text,
-    deadline: int32,
+    deadline: int8,
     block: text,
     execution: Execution
 });
@@ -132531,17 +132521,17 @@ var VoteDecision = Variant2({
     Abstain: bool
 });
 var Vote = Record2({
-    voteId: int32,
+    voteId: int8,
     proposalId: int8,
     decision: VoteDecision,
     address: text,
     signature: text
 });
-var proposals = StableBTreeMap(int32, Proposal, 0);
-var votes = StableBTreeMap(int32, Vote, 0);
+var proposals = StableBTreeMap(int8, Proposal, 0);
+var votes = StableBTreeMap(int8, Vote, 0);
 var backend_default = Canister({
     getProposal: query([
-        int32
+        int8
     ], Opt2(Proposal), (id2)=>{
         return getProposal(id2);
     }),
@@ -132551,7 +132541,7 @@ var backend_default = Canister({
     }),
     createProposal: update([
         text,
-        int32,
+        int8,
         text,
         text,
         int8,
@@ -132574,7 +132564,7 @@ var backend_default = Canister({
         return proposal;
     }),
     voteOnProposal: update([
-        int32,
+        int8,
         VoteDecision,
         text,
         text
@@ -132599,12 +132589,12 @@ var backend_default = Canister({
         }
     }),
     getVoteById: query([
-        int32
+        int8
     ], Opt2(Vote), (voteId)=>{
         return getVote(voteId);
     }),
     getVoteByProposalId: query([
-        int32
+        int8
     ], Vec2(Vote), (proposalId)=>{
         return getVote(proposalId);
     }),
@@ -132744,10 +132734,10 @@ async function ethGetCurrentBlock() {
     return jsonResponse.result;
 }
 async function verifySignatureWallet(signature, message, address) {
-    const { ethers: ethers2 } = require_lib2();
-    const signatureBuffer = ethers2.utils.arrayify(signature);
-    const messageBuffer = ethers2.utils.arrayify(message);
-    const isVerified = ethers2.utils.verifyMessage(messageBuffer, signatureBuffer, address);
+    const { ethers } = require_lib2();
+    const signatureBuffer = ethers.utils.arrayify(signature);
+    const messageBuffer = ethers.utils.arrayify(message);
+    const isVerified = ethers.utils.verifyMessage(messageBuffer, signatureBuffer, address);
     return isVerified;
 }
 async function getProposal(id2) {
