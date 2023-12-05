@@ -51,7 +51,7 @@ export default function ProposalForm() {
     {
       label: "Proposal Expiration (in seconds)",
       id: "proposalExpiration",
-      type: "bigint",
+      type: "number",
       value: proposalExpiration,
       setFunction: setProposalExpiration
     },
