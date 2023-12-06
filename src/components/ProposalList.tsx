@@ -34,7 +34,7 @@ export default function ProposalList() {
       }
     }
     fetchProposals();
-  }, []);
+  }, [backend]);
 
   return (
     <div>

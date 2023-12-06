@@ -4,8 +4,6 @@ import {
     Canister,
     ic,
     int8,
-    nat64,
-    nat8,
     None,
     Opt,
     Principal,
