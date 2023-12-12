@@ -37,14 +37,14 @@ export default function ProposalList() {
   }, [backend]);
 
   return (
-    <div>
+    <div className="mt-6">
       {newProposals.length > 0
         ? newProposals.map((proposal) => (
             <div
               key={proposal.title}
-              className="max-w-sm rounded overflow-hidden shadow-lg"
+              className="flex flex-row space-between-4 max-w-sm mb-4 mt-2 rounded overflow-hidden shadow-lg bg-white"
             >
-              <div className="px-6 py-4">
+              <div className="px-12 py-8">
                 <div className="font-bold text-xl mb-2">{proposal.title}</div>
                 <p className="text-gray-700 text-base mb-2">
                   {proposal.description}
