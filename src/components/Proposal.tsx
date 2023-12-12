@@ -19,16 +19,9 @@ interface Decision {
 export default function Proposal({ id, title, description, contractAddress, amount }: ProposalType) {
     const [decision, setDecision] = useState<Decision>({ No: false, Yes: false, Abstain: false });
 
-    console.log('decision', decision);
-
     const { data, isError, isLoading, isSuccess, signMessage } = useSignMessage({
         message: `Sign to check voting eligibility for Proposal ${id} for DAO ${contractAddress}`,
     });
-
-    console.log('data', data);
-    console.log('isError, isLoading, isSuccess', isError, isLoading, isSuccess);
-
-
 
     async function voteOnProposal() {
 
@@ -43,10 +36,9 @@ export default function Proposal({ id, title, description, contractAddress, amou
     const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedValue = event.target.value as keyof Decision;
     
-        // Update the state based on the selected value
         setDecision((prevDecision) => ({
           ...prevDecision,
-          [selectedValue]: !prevDecision[selectedValue], // Toggle the value
+          [selectedValue]: !prevDecision[selectedValue],
         }));
       };
     
