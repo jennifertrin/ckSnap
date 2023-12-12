@@ -83,6 +83,25 @@ export const idlFactory = ({ IDL }) => {
         ],
         ['query'],
       ),
+    'getAllVotes' : IDL.Func(
+        [],
+        [
+          IDL.Vec(
+            IDL.Record({
+              'signature' : IDL.Text,
+              'decision' : IDL.Record({
+                'No' : IDL.Bool,
+                'Yes' : IDL.Bool,
+                'Abstain' : IDL.Bool,
+              }),
+              'voteId' : IDL.Int8,
+              'address' : IDL.Text,
+              'proposalId' : IDL.Int8,
+            })
+          ),
+        ],
+        ['query'],
+      ),
     'getProposal' : IDL.Func(
         [IDL.Int8],
         [
@@ -111,7 +130,7 @@ export const idlFactory = ({ IDL }) => {
           IDL.Opt(
             IDL.Record({
               'signature' : IDL.Text,
-              'decision' : IDL.Variant({
+              'decision' : IDL.Record({
                 'No' : IDL.Bool,
                 'Yes' : IDL.Bool,
                 'Abstain' : IDL.Bool,
@@ -130,7 +149,7 @@ export const idlFactory = ({ IDL }) => {
           IDL.Vec(
             IDL.Record({
               'signature' : IDL.Text,
-              'decision' : IDL.Variant({
+              'decision' : IDL.Record({
                 'No' : IDL.Bool,
                 'Yes' : IDL.Bool,
                 'Abstain' : IDL.Bool,
@@ -156,7 +175,7 @@ export const idlFactory = ({ IDL }) => {
     'voteOnProposal' : IDL.Func(
         [
           IDL.Int8,
-          IDL.Variant({
+          IDL.Record({
             'No' : IDL.Bool,
             'Yes' : IDL.Bool,
             'Abstain' : IDL.Bool,
@@ -167,7 +186,7 @@ export const idlFactory = ({ IDL }) => {
         [
           IDL.Record({
             'signature' : IDL.Text,
-            'decision' : IDL.Variant({
+            'decision' : IDL.Record({
               'No' : IDL.Bool,
               'Yes' : IDL.Bool,
               'Abstain' : IDL.Bool,

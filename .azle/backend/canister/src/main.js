@@ -132515,7 +132515,7 @@ var Proposal = Record2({
     block: text,
     execution: Execution
 });
-var VoteDecision = Variant2({
+var VoteDecision = Record2({
     Yes: bool,
     No: bool,
     Abstain: bool
@@ -132587,6 +132587,10 @@ var backend_default = Canister({
             votes.insert(vote);
             return votes;
         }
+    }),
+    getAllVotes: query([], Vec2(Vote), ()=>{
+        const voteList = votes.values();
+        return voteList;
     }),
     getVoteById: query([
         int8

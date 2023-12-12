@@ -56,6 +56,15 @@ service : {
         amount : int8;
       },
     ) query;
+  getAllVotes : () -> (
+      vec record {
+        signature : text;
+        decision : record { No : bool; Yes : bool; Abstain : bool };
+        voteId : int8;
+        address : text;
+        proposalId : int8;
+      },
+    ) query;
   getProposal : (int8) -> (
       opt record {
         id : int8;
@@ -75,7 +84,7 @@ service : {
   getVoteById : (int8) -> (
       opt record {
         signature : text;
-        decision : variant { No : bool; Yes : bool; Abstain : bool };
+        decision : record { No : bool; Yes : bool; Abstain : bool };
         voteId : int8;
         address : text;
         proposalId : int8;
@@ -84,7 +93,7 @@ service : {
   getVoteByProposalId : (int8) -> (
       vec record {
         signature : text;
-        decision : variant { No : bool; Yes : bool; Abstain : bool };
+        decision : record { No : bool; Yes : bool; Abstain : bool };
         voteId : int8;
         address : text;
         proposalId : int8;
@@ -94,13 +103,13 @@ service : {
   sign : (vec nat8) -> (record { signature : vec nat8 });
   voteOnProposal : (
       int8,
-      variant { No : bool; Yes : bool; Abstain : bool },
+      record { No : bool; Yes : bool; Abstain : bool },
       text,
       text,
     ) -> (
       record {
         signature : text;
-        decision : variant { No : bool; Yes : bool; Abstain : bool };
+        decision : record { No : bool; Yes : bool; Abstain : bool };
         voteId : int8;
         address : text;
         proposalId : int8;

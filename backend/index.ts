@@ -101,11 +101,12 @@ export default Canister({
            return votes;
         }
     }),
+    getAllVotes: query([], Vec(Vote), () => {
+        const voteList = votes.values();
+        return voteList;
+    }),
     getVoteById: query([int8], Opt(Vote), (voteId) => {
         return getVote(voteId);
-    }),
-    getVoteByProposalId: query([int8], Vec(Vote), (proposalId) => {
-        return getVote(proposalId);
     }),
     ethGetTokenBalance: update([text, text, text], text, async (ethereumAddress, contractAddress, blockNumber) => {
         const url = "https://rpc.ankr.com/eth";

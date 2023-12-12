@@ -68,6 +68,18 @@ export interface _SERVICE {
       }
     >
   >,
+  'getAllVotes' : ActorMethod<
+    [],
+    Array<
+      {
+        'signature' : string,
+        'decision' : { 'No' : boolean, 'Yes' : boolean, 'Abstain' : boolean },
+        'voteId' : number,
+        'address' : string,
+        'proposalId' : number,
+      }
+    >
+  >,
   'getProposal' : ActorMethod<
     [number],
     [] | [
@@ -92,9 +104,7 @@ export interface _SERVICE {
     [] | [
       {
         'signature' : string,
-        'decision' : { 'No' : boolean } |
-          { 'Yes' : boolean } |
-          { 'Abstain' : boolean },
+        'decision' : { 'No' : boolean, 'Yes' : boolean, 'Abstain' : boolean },
         'voteId' : number,
         'address' : string,
         'proposalId' : number,
@@ -106,9 +116,7 @@ export interface _SERVICE {
     Array<
       {
         'signature' : string,
-        'decision' : { 'No' : boolean } |
-          { 'Yes' : boolean } |
-          { 'Abstain' : boolean },
+        'decision' : { 'No' : boolean, 'Yes' : boolean, 'Abstain' : boolean },
         'voteId' : number,
         'address' : string,
         'proposalId' : number,
@@ -123,17 +131,13 @@ export interface _SERVICE {
   'voteOnProposal' : ActorMethod<
     [
       number,
-      { 'No' : boolean } |
-        { 'Yes' : boolean } |
-        { 'Abstain' : boolean },
+      { 'No' : boolean, 'Yes' : boolean, 'Abstain' : boolean },
       string,
       string,
     ],
     {
       'signature' : string,
-      'decision' : { 'No' : boolean } |
-        { 'Yes' : boolean } |
-        { 'Abstain' : boolean },
+      'decision' : { 'No' : boolean, 'Yes' : boolean, 'Abstain' : boolean },
       'voteId' : number,
       'address' : string,
       'proposalId' : number,
