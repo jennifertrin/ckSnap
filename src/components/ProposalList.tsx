@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { backend } from "../declarations/backend";
 import EmptyContainer from "./EmptyContainer";
+import Proposal from "./Proposal";
 
 interface Execution  {
   to_address: string,
@@ -37,24 +38,10 @@ export default function ProposalList() {
   }, [backend]);
 
   return (
-    <div>
+    <div className="mt-6">
       {newProposals.length > 0
         ? newProposals.map((proposal) => (
-            <div
-              key={proposal.title}
-              className="max-w-sm rounded overflow-hidden shadow-lg"
-            >
-              <div className="px-6 py-4">
-                <div className="font-bold text-xl mb-2">{proposal.title}</div>
-                <p className="text-gray-700 text-base mb-2">
-                  {proposal.description}
-                </p>
-                <p className="text-gray-700 text-base mb-2">
-                  You need to own {proposal.amount.toString()} token from Ethereum contract address {proposal.contract_address}
-                </p>
-              </div>
-              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Vote</button>
-            </div>
+            <Proposal id={proposal.id} title={proposal.title} description={proposal.description} contractAddress={proposal.contract_address} amount={proposal.amount} />
           ))
         : <EmptyContainer pageTitle={'No proposals open at the moment'} pageMessage={'Create a proposal now'}></EmptyContainer>}
     </div>
