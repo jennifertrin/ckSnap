@@ -61,7 +61,7 @@ const Vote = Record({
     decision: VoteDecision,
     address: text,
     signature: text
-})
+}) || undefined
 
 let proposals = StableBTreeMap(int8, Proposal, 0);
 let votes = StableBTreeMap(int8, Vote, 0);
@@ -86,20 +86,21 @@ export default Canister({
     }),
     voteOnProposal: update([int8, VoteDecision, text, text], Vote, async (proposalId, decision, address, signature) => {
         const proposalDetails = await getProposal(proposalId);
-        let voteNumber = Number(votes.len());
-        const voteId = voteNumber++;
         const message = `Sign to check voting eligibility for Proposal ${proposalId} for DAO ${proposalDetails.contractAddress}`;
         const isVerified = await verifySignatureWallet(message, signature, address);
+        let voteNumber = Number(votes.len());
+        const voteId = voteNumber++;
+
+        const vote : typeof Vote = {
+            voteId, proposalId, decision, address, signature
+        }
 
         if (!isVerified) {
-            ic.trap('Not eligible to vote');
-        } else if (isVerified) {
-            const vote : typeof Vote = {
-                voteId, proposalId, decision, address, signature
-            }
-           votes.insert(vote);
-           return votes;
+          ic.trap('Not eligible to vote');
+          return vote;
         }
+          votes.insert(vote);
+          return vote;
     }),
     getAllVotes: query([], Vec(Vote), () => {
         const voteList = votes.values();
